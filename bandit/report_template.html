@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Security Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            color: #333;  /* Dark grey color for main headers */
+        }
+
+        h2, h3 {
+            color: #555;  /* Lighter grey color for subheaders */
+        }
+
+        .report-img {
+            width: 30%;
+            height: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        th, td {
+            border: none;
+            padding: 8px;
+            text-align: left;
+            background: transparent;  /* Added this line to make the th cells transparent */
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .low {
+            background: linear-gradient(to right, #FFEB3B, #FFC107);
+        }
+
+        .medium {
+            background: linear-gradient(to right, #FF9800, #FF5722);
+        }
+
+        .high {
+            background: linear-gradient(to right, #F44336, #B71C1C);
+        }
+    </style>
+</head>
+<body>
+    <h1>Security Report</h1>
+
+    <h2>1. Bandit</h2>
+    <p>
+    Bandit is a comprehensive security analysis tool for Python applications.
+    It's designed to find common security issues in Python code, such as insecure function calls or hardcoded passwords.
+    Bandit works by analyzing the Abstract Syntax Tree (AST) of the Python code to find patterns that could indicate potential security issues.
+    </p>
+
+    <h2>2. Summary</h2>
+    <p>
+    In this section, we present a summary of the results obtained by the Bandit tool.
+    This includes visualizations of the number of issues per severity level and per file, as well as a description of the findings.
+    </p>
+
+    <style>
+        .report-img {
+            width: 48%;
+            height: auto;
+        }
+    </style>
+        
+        <img class="report-img" src="images/severity_counts.png" alt="Severity Count">
+        <img class="report-img" src="images/file_counts.png" alt="File Count">
+        
+
+    <h2>3. Details</h2>
+    <p>
+    In this section, we provide detailed information about each vulnerability found by the Bandit tool.
+    This includes the file where the issue was found, the line number, a description of the issue, the severity and confidence levels, and a link to more information about how to fix it.
+    </p>
+
+    {% for severity in ['LOW', 'MEDIUM', 'HIGH'] %}
+        <h3>{{ severity }} Severity</h3>
+        <table>
+            <thead class="{{ severity|lower }}">
+                <tr>
+                    <th>File</th>
+                    <th>Line Number</th>
+                    <th>Description</th>
+                    <th>More Info</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for index, row in data[data.issue_severity == severity].iterrows() %}
+                <tr>
+                    <td>{{ row.filename }}</td>
+                    <td>{{ row.line_number }}</td>
+                    <td>{{ row.issue_text }}</td>
+                    <td><a href="{{ row.more_info }}">Link</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+</body>
+</html>
