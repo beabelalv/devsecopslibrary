@@ -22,7 +22,7 @@ html_content = template.render(
 )
 
 print("Writing HTML content to file...")
-with open('./bandit/report.html', 'w') as f:
+with open('./bandit/bandit-report.html', 'w') as f:
     f.write(html_content)
 
 print("Finished writing file.")
