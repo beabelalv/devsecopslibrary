@@ -1,3 +1,5 @@
 def call(String jsonReportPath) {
-    sh "python resources/bandit/html_generator.py ${jsonReportPath}"
+    def scriptPath = libraryResource('bandit/html_generator.py')
+    echo "Script Path: ${scriptPath}"
+    sh "python ${scriptPath} ${jsonReportPath}"
 }
