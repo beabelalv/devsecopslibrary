@@ -1,7 +1,7 @@
 def call(String jsonReportPath) {
     // Load the loadScript.groovy file
-    def loadScript = load './loadScript.groovy'
+    def loadScript = load 'vars/loadScript.groovy'
 
     // Use the call function to run the specific script with the JSON report path as an argument
-    loadScript.call('bandit/html_generator.py', jsonReportPath)
+    loadScript.call('resources/bandit/html_generator.py', jsonReportPath)
 }
