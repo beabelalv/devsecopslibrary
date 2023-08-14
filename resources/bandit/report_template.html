@@ -91,6 +91,7 @@
                     <th>Line Number</th>
                     <th>Description</th>
                     <th>Confidence</th>
+                    <th>CWE</th>
                     <th>Code</th>
                     <th>More Info</th>
                 </tr>
@@ -102,6 +103,7 @@
                     <td>{{ row.line_number }}</td>
                     <td>{{ row.issue_text }}</td>
                     <td>{{ row.issue_confidence }}</td>
+                    <td>{{ row.issue_cwe.id }}</td>
                     <td><div class="code-snippet">{{ row.code }}</div></td>
                     <td><a href="{{ row.more_info }}">Link</a></td>
                 </tr>
