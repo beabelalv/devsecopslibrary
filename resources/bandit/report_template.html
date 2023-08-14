@@ -49,6 +49,13 @@
         .low { background: linear-gradient(to right, #FFEB3B, #FFC107); }
         .medium { background: linear-gradient(to right, #FF9800, #FF5722); }
         .high { background: linear-gradient(to right, #F44336, #B71C1C); }
+        .code-snippet {
+            background-color: #f0f0f0;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            border-radius: 5px;
+            overflow: auto;
+        }
     </style>
 </head>
 <body>
@@ -83,6 +90,8 @@
                     <th>File</th>
                     <th>Line Number</th>
                     <th>Description</th>
+                    <th>Confidence</th>
+                    <th>Code</th>
                     <th>More Info</th>
                 </tr>
             </thead>
@@ -92,6 +101,8 @@
                     <td>{{ row.filename }}</td>
                     <td>{{ row.line_number }}</td>
                     <td>{{ row.issue_text }}</td>
+                    <td>{{ row.issue_confidence }}</td>
+                    <td><div class="code-snippet">{{ row.code }}</div></td>
                     <td><a href="{{ row.more_info }}">Link</a></td>
                 </tr>
                 {% endfor %}
