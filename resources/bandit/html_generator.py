@@ -47,20 +47,26 @@ def generate_severity_plot(df):
         'HIGH': "#F44336"
     }
     plt.figure(figsize=(20, 12))
+    plt.rcParams.update({'font.size': 24})  # Increase the font size
     bars = plt.bar(severity_counts.index, severity_counts.values, color=[severity_palette[severity] for severity in severity_counts.index])
-    plt.title('Number of Issues per Severity Level')
-    plt.xlabel('Severity Level')
-    plt.ylabel('Number of Issues')
+    plt.title('Number of Issues per Severity Level', fontsize=28)
+    plt.xlabel('Severity Level', fontsize=24)
+    plt.ylabel('Number of Issues', fontsize=24)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
     plt.tight_layout()
     plt.savefig(os.path.join(images_path, 'severity_counts.png'), dpi=300)
 
 def generate_file_plot(df):
     file_counts = df['filename'].value_counts()
     plt.figure(figsize=(20, 12))
+    plt.rcParams.update({'font.size': 24})  # Increase the font size
     sns.barplot(y=file_counts.index[:10], x=file_counts.values[:10], palette=sns.color_palette(["#757575", "#BDBDBD"]), orient='h')
-    plt.title('Number of Issues per File (Top 10)')
-    plt.xlabel('Number of Issues')
-    plt.ylabel('File')
+    plt.title('Number of Issues per File (Top 10)', fontsize=28)
+    plt.xlabel('Number of Issues', fontsize=24)
+    plt.ylabel('File', fontsize=24)
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=20)
     plt.tight_layout()
     plt.savefig(os.path.join(images_path, 'file_counts.png'), dpi=300)
 
