@@ -1,7 +1,7 @@
 from jinja2 import Environment, FileSystemLoader
 import pandas as pd
 #from .parser import parse_json, load_and_parse
-from .graphics_generator import generate_all_plots  # Import the new function
+from graphics_generator import generate_all_plots  # Import the new function
 
 #FUNCTIONS#
 def parse_json(data):
