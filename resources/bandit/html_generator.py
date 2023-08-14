@@ -1,6 +1,6 @@
 from jinja2 import Environment, FileSystemLoader
-from parser import parse_json, load_and_parse
-from graphics_generator import generate_all_plots  # Import the new function
+from .parser import parse_json, load_and_parse
+from .graphics_generator import generate_all_plots  # Import the new function
 
 # Parse JSON data to create df
 df = load_and_parse('./reports/bandit-results.json')
