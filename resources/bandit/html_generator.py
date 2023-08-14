@@ -1,5 +1,6 @@
 import argparse
 import json
+import os
 from jinja2 import Environment, FileSystemLoader
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -12,6 +13,10 @@ parser.add_argument('template_path', type=str, help='Path to the HTML template f
 args = parser.parse_args()
 file_path = args.file_path
 template_path = args.template_path
+
+# Define the path for images
+images_path = './bandit/images/'
+os.makedirs(images_path, exist_ok=True)  # Create the directory if it doesn't exist
 
 # Functions
 def parse_json(data):
@@ -38,7 +43,7 @@ def generate_severity_plot(df):
     plt.xlabel('Severity Level')
     plt.ylabel('Number of Issues')
     plt.tight_layout()
-    plt.savefig('./bandit/images/severity_counts.png', dpi=300)
+    plt.savefig(os.path.join(images_path, 'severity_counts.png'), dpi=300)
 
 def generate_file_plot(df):
     file_counts = df['filename'].value_counts()
@@ -49,7 +54,7 @@ def generate_file_plot(df):
     plt.xlabel('Number of Issues')
     plt.ylabel('File')
     plt.tight_layout()
-    plt.savefig('./bandit/images/file_counts.png', dpi=300)
+    plt.savefig(os.path.join(images_path, 'file_counts.png'), dpi=300)
 
 def generate_all_plots(file_path):
     df = load_and_parse(file_path)
@@ -66,8 +71,8 @@ template = env.get_template(template_path)
 print("Rendering template...")
 html_content = template.render(
     data=df,
-    severity_plot='./bandit/images/severity_counts.png',
-    file_plot='./bandit/images/file_counts.png'
+    severity_plot=os.path.join(images_path, 'severity_counts.png'),
+    file_plot=os.path.join(images_path, 'file_counts.png')
 )
 
 print("Writing HTML content to file...")
