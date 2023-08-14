@@ -22,7 +22,7 @@
         }
 
         .report-img {
-            width: 30%;
+            width: 48%;
             height: auto;
         }
 
@@ -39,24 +39,16 @@
             border: none;
             padding: 8px;
             text-align: left;
-            background: transparent;  /* Added this line to make the th cells transparent */
+            background: transparent;
         }
 
         tr:nth-child(even) {
             background-color: #f2f2f2;
         }
 
-        .low {
-            background: linear-gradient(to right, #FFEB3B, #FFC107);
-        }
-
-        .medium {
-            background: linear-gradient(to right, #FF9800, #FF5722);
-        }
-
-        .high {
-            background: linear-gradient(to right, #F44336, #B71C1C);
-        }
+        .low { background: linear-gradient(to right, #FFEB3B, #FFC107); }
+        .medium { background: linear-gradient(to right, #FF9800, #FF5722); }
+        .high { background: linear-gradient(to right, #F44336, #B71C1C); }
     </style>
 </head>
 <body>
@@ -72,25 +64,17 @@
     <h2>2. Summary</h2>
     <p>
     In this section, we present a summary of the results obtained by the Bandit tool.
-    This includes visualizations of the number of issues per severity level and per file, as well as a description of the findings.
+    This includes visualizations of the number of issues per severity level, per file, confidence levels, and common weakness enumeration (CWE) IDs.
     </p>
-
-    <style>
-        .report-img {
-            width: 48%;
-            height: auto;
-        }
-    </style>
-        
-        <img class="report-img" src="{{ severity_plot }}" alt="Severity Count">
-        <img class="report-img" src="{{ file_plot }}" alt="File Count">
+    <img class="report-img" src="{{ severity_plot }}" alt="Severity Count">
+    <img class="report-img" src="{{ file_plot }}" alt="File Count">
+    <img class="report-img" src="{{ confidence_plot }}" alt="Confidence Levels">
+    <img class="report-img" src="{{ cwe_plot }}" alt="CWE IDs">
 
     <h2>3. Details</h2>
     <p>
     In this section, we provide detailed information about each vulnerability found by the Bandit tool.
-    This includes the file where the issue was found, the line number, a description of the issue, the severity and confidence levels, and a link to more information about how to fix it.
     </p>
-
     {% for severity in ['LOW', 'MEDIUM', 'HIGH'] %}
         <h3>{{ severity }} Severity</h3>
         <table>
