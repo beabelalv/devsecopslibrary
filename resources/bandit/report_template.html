@@ -77,14 +77,16 @@
     </p>
 
     <h2>2. Summary</h2>
-    <div class="img-container">
-        <img class="report-img" src="{{ severity_plot }}" alt="Severity Count">
-        <img class="report-img" src="{{ file_plot }}" alt="File Count">
-    </div>
-    <div class="img-container">
-        <img class="report-img" src="{{ confidence_plot }}" alt="Confidence Count">
-        <img class="report-img" src="{{ issue_type_plot }}" alt="Issue Type Count">
-    </div>
+    <!-- First row of images -->
+    <img class="report-img" src="{{ severity_plot }}" alt="Severity Count">
+    <img class="report-img" src="{{ file_plot }}" alt="File Count">
+
+    <!-- Margin between the rows -->
+    <div style="margin: 30px 0;"></div>
+
+    <!-- Second row of images -->
+    <img class="report-img" src="{{ issue_type_plot }}" alt="Issue Type Count">
+    <img class="report-img" src="{{ confidence_level_plot }}" alt="Confidence Level Count">
 
     <h2>3. Details</h2>
     <p>
