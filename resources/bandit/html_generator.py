@@ -6,10 +6,12 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Argument parsing
-parser = argparse.ArgumentParser(description='Process the JSON file.')
+parser = argparse.ArgumentParser(description='Process the JSON file and HTML template.')
 parser.add_argument('file_path', type=str, help='Path to the JSON file')
+parser.add_argument('template_path', type=str, help='Path to the HTML template file')
 args = parser.parse_args()
 file_path = args.file_path
+template_path = args.template_path
 
 # Functions
 def parse_json(data):
