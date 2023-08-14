@@ -2,7 +2,6 @@ from jinja2 import Environment, FileSystemLoader
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from parser import load_and_parse
 
 
 #Functions:#
