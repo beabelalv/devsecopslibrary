@@ -1,11 +1,11 @@
 import argparse
 import json
 import os
+import base64
+from jinja2 import Environment, FileSystemLoader
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import base64
-from jinja2 import Environment, FileSystemLoader
 
 # Argument parsing
 parser = argparse.ArgumentParser(description='Process the JSON file and HTML template.')
@@ -26,17 +26,17 @@ def get_image_as_data_url(image_path):
 
 # Functions
 def parse_json(data):
-    df = pd.json_normalize(data['results'], meta=['filename'], errors='ignore')
+    results = []
+    for item in data['results']:
+        item['cwe_id'] = item['issue_cwe']['id']
+        results.append(item)
+    df = pd.DataFrame(results)
     return df
 
 def load_and_parse(file_path):
     with open(file_path) as f:
         data = json.load(f)
     df = parse_json(data)
-    # Preprocess the data to handle the issue_cwe field
-    for index, row in df.iterrows():
-        if 'issue_cwe' in row and isinstance(row['issue_cwe'], dict):
-            df.loc[index, 'cwe_id'] = row['issue_cwe'].get('id')
     return df
 
 def generate_severity_plot(df):
@@ -46,8 +46,7 @@ def generate_severity_plot(df):
         'MEDIUM': "#FF9800",
         'HIGH': "#F44336"
     }
-    plt.figure(figsize=(20, 12))
-    plt.rcParams.update({'font.size': 18})
+    plt.figure(figsize=(10, 6))
     bars = plt.bar(severity_counts.index, severity_counts.values, color=[severity_palette[severity] for severity in severity_counts.index])
     plt.title('Number of Issues per Severity Level')
     plt.xlabel('Severity Level')
@@ -57,8 +56,7 @@ def generate_severity_plot(df):
 
 def generate_file_plot(df):
     file_counts = df['filename'].value_counts()
-    plt.figure(figsize=(20, 12))
-    plt.rcParams.update({'font.size': 18})
+    plt.figure(figsize=(10, 6))
     sns.barplot(y=file_counts.index[:10], x=file_counts.values[:10], palette=sns.color_palette(["#757575", "#BDBDBD"]), orient='h')
     plt.title('Number of Issues per File (Top 10)')
     plt.xlabel('Number of Issues')
@@ -66,30 +64,25 @@ def generate_file_plot(df):
     plt.tight_layout()
     plt.savefig(os.path.join(images_path, 'file_counts.png'), dpi=300)
 
-# New function to generate confidence level plot (Plot 4)
 def generate_confidence_plot(df):
     confidence_counts = df['issue_confidence'].value_counts()
-    plt.figure(figsize=(20, 12))
-    plt.rcParams.update({'font.size': 18})
-    sns.barplot(x=confidence_counts.index, y=confidence_counts.values, palette='viridis')
-    plt.title('Distribution of Confidence Levels')
+    plt.figure(figsize=(10, 6))
+    sns.barplot(x=confidence_counts.index, y=confidence_counts.values, palette='coolwarm')
+    plt.title('Number of Issues per Confidence Level')
     plt.xlabel('Confidence Level')
     plt.ylabel('Number of Issues')
     plt.tight_layout()
     plt.savefig(os.path.join(images_path, 'confidence_counts.png'), dpi=300)
 
-# New function to generate CWE ID plot (Plot 7)
-def generate_cwe_plot(df):
-    cwe_counts = df['issue_cwe.id'].value_counts().head(10) # Taking top 10 CWE IDs
-    plt.figure(figsize=(20, 12))
-    plt.rcParams.update({'font.size': 18})
-    sns.barplot(x=cwe_counts.index, y=cwe_counts.values, palette='coolwarm')
-    plt.title('Distribution of CWE IDs (Top 10)')
-    plt.xlabel('CWE ID')
-    plt.ylabel('Number of Issues')
-    plt.xticks(rotation=45)
+def generate_issue_type_plot(df):
+    issue_type_counts = df['test_name'].value_counts()
+    plt.figure(figsize=(10, 6))
+    sns.barplot(y=issue_type_counts.index[:10], x=issue_type_counts.values[:10], palette='viridis', orient='h')
+    plt.title('Number of Issues per Type (Top 10)')
+    plt.xlabel('Number of Issues')
+    plt.ylabel('Issue Type')
     plt.tight_layout()
-    plt.savefig(os.path.join(images_path, 'cwe_counts.png'), dpi=300)
+    plt.savefig(os.path.join(images_path, 'issue_type_counts.png'), dpi=300)
 
 def generate_all_plots(file_path):
     df = load_and_parse(file_path)
