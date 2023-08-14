@@ -14,16 +14,23 @@
         }
 
         h1 {
-            color: #333;  /* Dark grey color for main headers */
+            color: #333;
         }
 
         h2, h3 {
-            color: #555;  /* Lighter grey color for subheaders */
+            color: #555;
         }
 
         .report-img {
-            width: 100%;
+            width: 48%;
             height: auto;
+        }
+
+        .img-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
         table {
@@ -39,7 +46,7 @@
             border: none;
             padding: 8px;
             text-align: left;
-            background: transparent;  /* Added this line to make the th cells transparent */
+            background: transparent;
         }
 
         tr:nth-child(even) {
@@ -70,15 +77,14 @@
     </p>
 
     <h2>2. Summary</h2>
-    <p>
-        In this section, we present a summary of the results obtained by the Bandit tool.
-        This includes visualizations of the number of issues per severity level and per file, as well as a description of the findings.
-    </p>
-        
-    <img class="report-img" src="{{ severity_plot }}" alt="Severity Count">
-    <img class="report-img" src="{{ file_plot }}" alt="File Count">
-    <img class="report-img" src="{{ confidence_plot }}" alt="Confidence Count">
-    <img class="report-img" src="{{ issue_type_plot }}" alt="Issue Type Count">
+    <div class="img-container">
+        <img class="report-img" src="{{ severity_plot }}" alt="Severity Count">
+        <img class="report-img" src="{{ file_plot }}" alt="File Count">
+    </div>
+    <div class="img-container">
+        <img class="report-img" src="{{ confidence_plot }}" alt="Confidence Count">
+        <img class="report-img" src="{{ issue_type_plot }}" alt="Issue Type Count">
+    </div>
 
     <h2>3. Details</h2>
     <p>
