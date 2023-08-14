@@ -22,7 +22,7 @@
         }
 
         .report-img {
-            width: 30%;
+            width: 100%;
             height: auto;
         }
 
@@ -39,7 +39,7 @@
             border: none;
             padding: 8px;
             text-align: left;
-            background: transparent;
+            background: transparent;  /* Added this line to make the th cells transparent */
         }
 
         tr:nth-child(even) {
@@ -57,12 +57,6 @@
         .high {
             background: linear-gradient(to right, #F44336, #B71C1C);
         }
-
-        .code-snippet {
-            white-space: pre-line;
-            font-family: monospace;
-            overflow-wrap: break-word;
-        }
     </style>
 </head>
 <body>
@@ -70,17 +64,17 @@
 
     <h2>1. Bandit</h2>
     <p>
-    Bandit is a comprehensive security analysis tool for Python applications.
-    It's designed to find common security issues in Python code, such as insecure function calls or hardcoded passwords.
-    Bandit works by analyzing the Abstract Syntax Tree (AST) of the Python code to find patterns that could indicate potential security issues.
+        Bandit is a comprehensive security analysis tool for Python applications.
+        It's designed to find common security issues in Python code, such as insecure function calls or hardcoded passwords.
+        Bandit works by analyzing the Abstract Syntax Tree (AST) of the Python code to find patterns that could indicate potential security issues.
     </p>
 
     <h2>2. Summary</h2>
     <p>
-    In this section, we present a summary of the results obtained by the Bandit tool.
-    This includes visualizations of the number of issues per severity level and per file, as well as a description of the findings.
+        In this section, we present a summary of the results obtained by the Bandit tool.
+        This includes visualizations of the number of issues per severity level and per file, as well as a description of the findings.
     </p>
-    
+        
     <img class="report-img" src="{{ severity_plot }}" alt="Severity Count">
     <img class="report-img" src="{{ file_plot }}" alt="File Count">
     <img class="report-img" src="{{ confidence_plot }}" alt="Confidence Count">
@@ -88,8 +82,8 @@
 
     <h2>3. Details</h2>
     <p>
-    In this section, we provide detailed information about each vulnerability found by the Bandit tool.
-    This includes the file where the issue was found, the line number, a description of the issue, the severity and confidence levels, and a link to more information about how to fix it.
+        In this section, we provide detailed information about each vulnerability found by the Bandit tool.
+        This includes the file where the issue was found, the line number, a description of the issue, the severity and confidence levels, and a link to more information about how to fix it.
     </p>
 
     {% for severity in ['LOW', 'MEDIUM', 'HIGH'] %}
@@ -99,9 +93,10 @@
                 <tr>
                     <th>File</th>
                     <th>Line Number</th>
-                    <th>Description</th>
                     <th>Code</th>
-                    <th>CWE ID</th>
+                    <th>Description</th>
+                    <th>CWE</th>
+                    <th>Confidence</th>
                     <th>More Info</th>
                 </tr>
             </thead>
@@ -110,9 +105,10 @@
                 <tr>
                     <td>{{ row.filename }}</td>
                     <td>{{ row.line_number }}</td>
+                    <td><pre>{{ row.code }}</pre></td>
                     <td>{{ row.issue_text }}</td>
-                    <td class="code-snippet">{{ row.code }}</td>
                     <td>{{ row.cwe_id }}</td>
+                    <td>{{ row.issue_confidence }}</td>
                     <td><a href="{{ row.more_info }}">Link</a></td>
                 </tr>
                 {% endfor %}
