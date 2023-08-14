@@ -59,13 +59,13 @@ df = load_and_parse(file_path)
 generate_all_plots(file_path)
 
 env = Environment(loader=FileSystemLoader('./'))
-template = env.get_template('./bandit/report_template.html')
+template = env.get_template(template_path)
 
 print("Rendering template...")
 html_content = template.render(
     data=df,
-    severity_plot='./images/severity_counts.png',
-    file_plot='./images/file_counts.png'
+    severity_plot='./bandit/images/severity_counts.png',
+    file_plot='./bandit/images/file_counts.png'
 )
 
 print("Writing HTML content to file...")
