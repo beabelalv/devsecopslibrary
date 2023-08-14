@@ -1,13 +1,11 @@
-# Modifying the existing Python code to include the new plots
-
 import argparse
 import json
 import os
-import base64
-from jinja2 import Environment, FileSystemLoader
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import base64
+from jinja2 import Environment, FileSystemLoader
 
 # Argument parsing
 parser = argparse.ArgumentParser(description='Process the JSON file and HTML template.')
@@ -26,6 +24,7 @@ def get_image_as_data_url(image_path):
         encoded_image = base64.b64encode(image_file.read()).decode()
     return f"data:image/png;base64,{encoded_image}"
 
+# Functions
 def parse_json(data):
     df = pd.json_normalize(data['results'], meta=['filename'], errors='ignore')
     return df
@@ -34,6 +33,10 @@ def load_and_parse(file_path):
     with open(file_path) as f:
         data = json.load(f)
     df = parse_json(data)
+    # Preprocess the data to handle the issue_cwe field
+    for index, row in df.iterrows():
+        if 'issue_cwe' in row and isinstance(row['issue_cwe'], dict):
+            df.loc[index, 'cwe_id'] = row['issue_cwe'].get('id')
     return df
 
 def generate_severity_plot(df):
@@ -92,8 +95,8 @@ def generate_all_plots(file_path):
     df = load_and_parse(file_path)
     generate_severity_plot(df)
     generate_file_plot(df)
-    generate_confidence_plot(df) # Generating Plot 4
-    generate_cwe_plot(df)       # Generating Plot 7
+    generate_confidence_plot(df)
+    generate_issue_type_plot(df)
 
 # Main
 df = load_and_parse(file_path)
@@ -102,8 +105,8 @@ generate_all_plots(file_path)
 # Convert the images to data URLs
 severity_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'severity_counts.png'))
 file_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'file_counts.png'))
-confidence_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'confidence_counts.png')) # Data URL for Plot 4
-cwe_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'cwe_counts.png'))             # Data URL for Plot 7
+confidence_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'confidence_counts.png'))
+issue_type_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'issue_type_counts.png'))
 
 env = Environment(loader=FileSystemLoader('./'))
 template = env.get_template(template_path)
@@ -113,8 +116,8 @@ html_content = template.render(
     data=df,
     severity_plot=severity_plot_data_url,
     file_plot=file_plot_data_url,
-    confidence_plot=confidence_plot_data_url, # Including Plot 4 in the rendered HTML
-    cwe_plot=cwe_plot_data_url                # Including Plot 7 in the rendered HTML
+    confidence_plot=confidence_plot_data_url,
+    issue_type_plot=issue_type_plot_data_url
 )
 
 print("Writing HTML content to file...")
