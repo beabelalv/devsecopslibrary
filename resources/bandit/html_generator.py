@@ -46,7 +46,7 @@ def generate_severity_plot(df):
         'MEDIUM': "#FF9800",
         'HIGH': "#F44336"
     }
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(20, 12))
     bars = plt.bar(severity_counts.index, severity_counts.values, color=[severity_palette[severity] for severity in severity_counts.index])
     plt.title('Number of Issues per Severity Level')
     plt.xlabel('Severity Level')
@@ -56,7 +56,7 @@ def generate_severity_plot(df):
 
 def generate_file_plot(df):
     file_counts = df['filename'].value_counts()
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(20, 12))
     sns.barplot(y=file_counts.index[:10], x=file_counts.values[:10], palette=sns.color_palette(["#757575", "#BDBDBD"]), orient='h')
     plt.title('Number of Issues per File (Top 10)')
     plt.xlabel('Number of Issues')
@@ -66,7 +66,7 @@ def generate_file_plot(df):
 
 def generate_confidence_plot(df):
     confidence_counts = df['issue_confidence'].value_counts()
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(20, 12))
     sns.barplot(x=confidence_counts.index, y=confidence_counts.values, palette='coolwarm')
     plt.title('Number of Issues per Confidence Level')
     plt.xlabel('Confidence Level')
@@ -76,7 +76,7 @@ def generate_confidence_plot(df):
 
 def generate_issue_type_plot(df):
     issue_type_counts = df['test_name'].value_counts()
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(20, 12))
     sns.barplot(y=issue_type_counts.index[:10], x=issue_type_counts.values[:10], palette='viridis', orient='h')
     plt.title('Number of Issues per Type (Top 10)')
     plt.xlabel('Number of Issues')
