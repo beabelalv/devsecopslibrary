@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import base64
 from jinja2 import Environment, FileSystemLoader
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -17,6 +18,11 @@ template_path = args.template_path
 # Define the path for images
 images_path = './bandit/images/'
 os.makedirs(images_path, exist_ok=True)  # Create the directory if it doesn't exist
+
+def get_image_as_data_url(image_path):
+    with open(image_path, 'rb') as image_file:
+        encoded_image = base64.b64encode(image_file.read()).decode()
+    return f"data:image/png;base64,{encoded_image}"
 
 # Functions
 def parse_json(data):
@@ -65,18 +71,22 @@ def generate_all_plots(file_path):
 df = load_and_parse(file_path)
 generate_all_plots(file_path)
 
+# Convert the images to data URLs
+severity_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'severity_counts.png'))
+file_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'file_counts.png'))
+
 env = Environment(loader=FileSystemLoader('./'))
 template = env.get_template(template_path)
 
 print("Rendering template...")
 html_content = template.render(
     data=df,
-    severity_plot=os.path.join(images_path, 'severity_counts.png'),
-    file_plot=os.path.join(images_path, 'file_counts.png')
+    severity_plot=severity_plot_data_url,
+    file_plot=file_plot_data_url
 )
 
 print("Writing HTML content to file...")
-with open('./bandit/bandit-report.html', 'w') as f:
+with open('./bandit/report.html', 'w') as f:
     f.write(html_content)
 
 print("Finished writing file.")
