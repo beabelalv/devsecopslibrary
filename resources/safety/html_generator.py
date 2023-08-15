@@ -24,6 +24,12 @@ def get_image_as_data_url(image_path):
         encoded_image = base64.b64encode(image_file.read()).decode()
     return f"data:image/png;base64,{encoded_image}"
 
+def load_and_parse_safety(file_path):
+    with open(file_path, 'r') as f:
+        data = json.load(f)
+    df = parse_safety_json(data)
+    return df
+
 def parse_safety_json(data):
     records = []
     for entry in data:
