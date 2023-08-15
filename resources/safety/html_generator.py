@@ -1,4 +1,3 @@
-
 import argparse
 import json
 import os
@@ -28,10 +27,7 @@ def get_image_as_data_url(image_path):
 
 # Functions for Safety report generation
 def parse_safety_json(data):
-    results = []
-    for item in data['issues']:
-        results.append(item)
-    return pd.DataFrame(results)
+    return pd.DataFrame(data['vulnerabilities'])
 
 def load_and_parse(file_path):
     with open(file_path) as f:
