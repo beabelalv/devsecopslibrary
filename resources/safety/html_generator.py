@@ -1,86 +1,106 @@
 
+import argparse
+import json
+import os
+import base64
 import pandas as pd
 import matplotlib.pyplot as plt
-import os
-import json
+import seaborn as sns
 from jinja2 import Environment, FileSystemLoader
-import datetime
 
-# Constants
+# Argument parsing
+parser = argparse.ArgumentParser(description='Process the JSON file and HTML template for Safety.')
+parser.add_argument('file_path', type=str, help='Path to the JSON file')
+parser.add_argument('template_path', type=str, help='Path to the HTML template file')
+args = parser.parse_args()
+file_path = args.file_path
+template_path = args.template_path
+
+# Define the path for images
 images_path = './safety/images/'
+os.makedirs(images_path, exist_ok=True)  # Create the directory if it doesn't exist
 
-# Functions
-def parse_safety_json(data):
-    vulnerabilities = []
-    for item in data:
-        vulnerabilities.append({
-            'package_name': item[0],
-            'affected_versions': item[1],
-            'installed': item[2],
-            'advisory': item[3],
-            'CVE': item[4],
-            'advisory_url': item[5]
-        })
-    df = pd.DataFrame(vulnerabilities)
-    return df
+def get_image_as_data_url(image_path):
+    with open(image_path, 'rb') as image_file:
+        encoded_image = base64.b64encode(image_file.read()).decode()
+    return f"data:image/png;base64,{encoded_image}"
 
-def generate_vulnerable_vs_safe_pie_plot(df):
-    vulnerable = len(df[df['advisory'] != 'No known vulnerabilities'])
-    safe = len(df[df['advisory'] == 'No known vulnerabilities'])
-    labels = ['Vulnerable Packages', 'Safe Packages']
-    sizes = [vulnerable, safe]
-    colors = ['#FF6347', '#4CAF50']
-    plt.figure(figsize=(8, 8))
-    plt.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90)
-    plt.axis('equal')
-    plt.title("Vulnerable vs Safe Packages")
-    plt.savefig(os.path.join(images_path, 'vulnerable_vs_safe_pie_plot.png'), dpi=300)
-
-def generate_vulnerabilities_per_affected_package(df):
-    vulnerabilities_count = df.groupby('package_name')['CVE'].count().sort_values(ascending=False)
-    plt.figure(figsize=(10, 8))
-    vulnerabilities_count.plot(kind='bar', color='#FFA07A')
-    plt.title('Number of Vulnerabilities per Affected Package')
-    plt.xlabel('Package Name')
-    plt.ylabel('Number of Vulnerabilities')
-    plt.xticks(rotation=45, ha='right')
-    plt.tight_layout()
-    plt.grid(axis='y')
-    for index, value in enumerate(vulnerabilities_count):
-        plt.text(index, value + 0.1, str(value), ha='center', va='center')
-    plt.savefig(os.path.join(images_path, 'vulnerabilities_per_affected_package.png'), dpi=300)
-
-def generate_all_analyzed_packages_pie_plot(df):
-    labels = df['package_name']
-    sizes = [1] * len(df)
-    plt.figure(figsize=(10, 10))
-    plt.pie(sizes, labels=labels, autopct='', startangle=90)
-    plt.axis('equal')
-    plt.title("All Analyzed Packages")
-    plt.savefig(os.path.join(images_path, 'all_analyzed_packages_pie_plot.png'), dpi=300)
-
-def generate_all_plots_for_safety(file_path):
+def load_and_parse_safety(file_path):
     with open(file_path, 'r') as f:
         data = json.load(f)
-    df = parse_safety_json(data)
-    os.makedirs(images_path, exist_ok=True)
-    generate_vulnerable_vs_safe_pie_plot(df)
-    generate_all_analyzed_packages_pie_plot(df)
-    generate_vulnerabilities_per_affected_package(df)
-    return df, data
+    df = pd.DataFrame(data)
+    return df
 
-def generate_html_report(file_path, template_path, output_path, image_path, data):
-    env = Environment(loader=FileSystemLoader('/'))
-    template = env.get_template(template_path)
-    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    html_content = template.render(timestamp=timestamp, image_path=image_path, data=data)
-    with open(output_path, 'w') as f:
-        f.write(html_content)
+def generate_analyzed_packages_pie(df):
+    package_counts = df['package_name'].value_counts()
+    colors = sns.color_palette("pastel", len(package_counts))
+    plt.figure(figsize=(14, 10))
+    wedges, texts, autotexts = plt.pie(package_counts.values, labels=package_counts.index, autopct='%1.1f%%', startangle=140, colors=colors, wedgeprops=dict(width=0.3, edgecolor='w'), pctdistance=0.85, textprops=dict(color="black"))
+    for text, autotext in zip(texts, autotexts):
+        text.set(size=15)
+        autotext.set(size=15)
+        autotext.set_color('black')
+    centre_circle = plt.Circle((0,0),0.70,fc='white')
+    fig = plt.gcf()
+    fig.gca().add_artist(centre_circle)
+    plt.title('Distribution of Analyzed Packages', fontsize=24)
+    plt.tight_layout()
+    plt.savefig(os.path.join(images_path, 'analyzed_packages_pie.png'), dpi=300)
 
-# Main execution
-if __name__ == '__main__':
-    file_path = 'safety-results.json'
-    template_path = '/mnt/data/temp_report_template.html'
-    output_path = './safety/safety_report.html'
-    df, data = generate_all_plots_for_safety(file_path)
-    generate_html_report(file_path, template_path, output_path, images_path, df.to_dict(orient="records"))
+def generate_vulnerable_vs_safe_pie(df):
+    affected = len(df[df['vulnerable_versions'] != 'No known vulnerabilities'])
+    safe = len(df) - affected
+    labels = ['Affected Packages', 'Safe Packages']
+    sizes = [affected, safe]
+    colors = ['#FF9999', '#66B266']
+    plt.figure(figsize=(14, 10))
+    wedges, texts, autotexts = plt.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=140, wedgeprops=dict(width=0.3, edgecolor='w'), pctdistance=0.85, textprops=dict(color="black"))
+    for text, autotext in zip(texts, autotexts):
+        text.set(size=15)
+        autotext.set(size=15)
+        autotext.set_color('black')
+    centre_circle = plt.Circle((0,0),0.70,fc='white')
+    fig = plt.gcf()
+    fig.gca().add_artist(centre_circle)
+    plt.title('Vulnerable vs. Safe Packages', fontsize=24)
+    plt.tight_layout()
+    plt.savefig(os.path.join(images_path, 'vulnerable_vs_safe_pie.png'), dpi=300)
+
+def generate_vulnerabilities_per_package_plot(df):
+    affected_df = df[df['vulnerable_versions'] != 'No known vulnerabilities']
+    vuln_counts = affected_df['package_name'].value_counts()
+    plt.figure(figsize=(14, 10))
+    sns.barplot(y=vuln_counts.index, x=vuln_counts.values, palette=sns.color_palette("Reds_r", len(vuln_counts)))
+    plt.title('Number of Vulnerabilities per Affected Package', fontsize=24)
+    plt.xlabel('Number of Vulnerabilities', fontsize=18)
+    plt.ylabel('Package Name', fontsize=18)
+    plt.tight_layout()
+    plt.savefig(os.path.join(images_path, 'vuln_per_package.png'), dpi=300)
+
+# Main logic
+df = load_and_parse_safety(file_path)
+generate_analyzed_packages_pie(df)
+generate_vulnerable_vs_safe_pie(df)
+generate_vulnerabilities_per_package_plot(df)
+
+# Convert the images to data URL
+analyzed_packages_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'analyzed_packages_pie.png'))
+vulnerable_vs_safe_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'vulnerable_vs_safe_pie.png'))
+vuln_per_package_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'vuln_per_package.png'))
+
+env = Environment(loader=FileSystemLoader('./'))
+template = env.get_template(template_path)
+
+print("Rendering template...")
+html_content = template.render(
+    data=df,
+    analyzed_packages_plot=analyzed_packages_plot_data_url,
+    vulnerable_vs_safe_plot=vulnerable_vs_safe_plot_data_url,
+    vuln_per_package_plot=vuln_per_package_plot_data_url
+)
+
+print("Writing HTML content to file...")
+with open('./safety/safety-report.html', 'w') as f:
+    f.write(html_content)
+
+print("Finished writing file.")
