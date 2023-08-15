@@ -89,12 +89,12 @@ def generate_vulnerabilities_per_package_plot(df):
     plt.xlabel('Number of Vulnerabilities', fontsize=18)
     plt.ylabel('Package Name', fontsize=18)
     plt.tight_layout()
-    plt.savefig(os.path.join(images_path, 'vuln_per_package.png'), dpi=300)
+    plt.savefig(os.path.join(images_path, 'vulnerabilities_per_package.png'), dpi=300)
 
 df = load_and_parse_safety(file_path)
-generate_vulnerable_vs_safe_pie_plot(df)
-generate_vulnerabilities_per_package_bar_plot(df)
-generate_analyzed_packages_pie_chart(df)
+generate_analyzed_packages_pie(df)
+generate_vulnerable_vs_safe_pie(df)
+generate_vulnerabilities_per_package_plot(df)
 
 env = Environment(loader=FileSystemLoader('./'))
 template = env.get_template(template_path)
