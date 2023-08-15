@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Safety Security Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        h2, h3 {
+            color: #555;
+        }
+
+        .report-img {
+            width: 48%;
+            height: auto;
+        }
+
+        .img-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        th, td {
+            border: none;
+            padding: 8px;
+            text-align: left;
+            background: transparent;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .low {
+            background: linear-gradient(to right, #FFEB3B, #FFC107);
+        }
+
+        .medium {
+            background: linear-gradient(to right, #FF9800, #FF5722);
+        }
+
+        .high {
+            background: linear-gradient(to right, #F44336, #B71C1C);
+        }
+    </style>
+</head>
+<body>
+    <h1>Safety Security Report</h1>
+
+    <h2>1. Safety</h2>
+    <p>
+        Safety is a tool for checking Python dependencies for known security vulnerabilities. It scans the requirements file for your project and checks the installed versions of each package against a vulnerability database.
+    </p>
+
+    <h2>2. Summary</h2>
+    <!-- Pie chart for vulnerabilities distribution across affected packages -->
+    <img class="report-img" src="{{ vulnerability_pie }}" alt="Vulnerability Distribution">
+
+    <h2>3. Details</h2>
+    <p>
+        In this section, we provide detailed information about each vulnerability found by the Safety tool. This includes the package name, the affected version, and a description of the vulnerability.
+    </p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Package Name</th>
+                <th>Affected Version</th>
+                <th>Vulnerability Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for index, row in data.iterrows() %}
+            <tr>
+                <td>{{ row.package_name }}</td>
+                <td>{{ row.affected_version }}</td>
+                <td>{{ row.vulnerability_description }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
