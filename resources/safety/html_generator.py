@@ -50,7 +50,7 @@ def generate_total_packages_pie_plot(data):
 
 def generate_vulnerable_vs_safe_pie_plot(df):
     vulnerabilities = len(df)
-    safe = len(df[df['vulnerability_description'] == 'No known vulnerabilities'])
+    safe = len(df[df['advisory'] == 'No known vulnerabilities'])
     labels = ['Vulnerable', 'Safe']
     sizes = [vulnerabilities, safe]
     plt.figure(figsize=(12, 8))
