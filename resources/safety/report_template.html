@@ -53,50 +53,53 @@
         tr:nth-child(even) {
             background-color: #f2f2f2;
         }
-
-        .low {
-            background: linear-gradient(to right, #FFEB3B, #FFC107);
-        }
-
-        .medium {
-            background: linear-gradient(to right, #FF9800, #FF5722);
-        }
-
-        .high {
-            background: linear-gradient(to right, #F44336, #B71C1C);
-        }
     </style>
 </head>
 <body>
     <h1>Safety Security Report</h1>
 
-    <h2>1. Safety</h2>
+    <h2>1. Overview</h2>
     <p>
-        Safety is a tool for checking Python dependencies for known security vulnerabilities. It scans the requirements file for your project and checks the installed versions of each package against a vulnerability database.
+        Safety is a tool that checks for known security vulnerabilities in Python packages.
     </p>
 
     <h2>2. Summary</h2>
-    <!-- Pie chart for vulnerabilities distribution across affected packages -->
-    <img class="report-img" src="{{ vulnerability_pie }}" alt="Vulnerability Distribution">
+    <!-- First row of images -->
+    <div class="img-container">
+        <img class="report-img" src="{{ total_packages_pie }}" alt="Total Packages Analyzed">
+        <img class="report-img" src="{{ vulnerable_vs_safe_pie }}" alt="Vulnerable vs. Safe Packages">
+    </div>
+
+    <!-- Margin between the rows -->
+    <div style="margin: 30px 0;"></div>
+
+    <!-- Second row of images -->
+    <div class="img-container">
+        <img class="report-img" src="{{ vulnerabilities_per_package_pie }}" alt="Vulnerabilities per Affected Package">
+    </div>
 
     <h2>3. Details</h2>
     <p>
-        In this section, we provide detailed information about each vulnerability found by the Safety tool. This includes the package name, the affected version, and a description of the vulnerability.
+        Detailed information about each vulnerability found by the Safety tool.
     </p>
 
     <table>
         <thead>
             <tr>
                 <th>Package Name</th>
+                <th>Current Version</th>
                 <th>Affected Version</th>
-                <th>Vulnerability Description</th>
+                <th>Vulnerability ID</th>
+                <th>Description</th>
             </tr>
         </thead>
         <tbody>
             {% for index, row in data.iterrows() %}
             <tr>
                 <td>{{ row.package_name }}</td>
+                <td>{{ row.package_version }}</td>
                 <td>{{ row.affected_version }}</td>
+                <td>{{ row.vulnerability_id }}</td>
                 <td>{{ row.vulnerability_description }}</td>
             </tr>
             {% endfor %}
