@@ -6,7 +6,6 @@ import base64
 from jinja2 import Environment, FileSystemLoader
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
 
 # Argument parsing
 parser = argparse.ArgumentParser(description='Process the JSON file and HTML template.')
@@ -25,79 +24,97 @@ def get_image_as_data_url(image_path):
         encoded_image = base64.b64encode(image_file.read()).decode()
     return f"data:image/png;base64,{encoded_image}"
 
+# Functions to parse the safety JSON data and convert it into a pandas DataFrame
 def parse_safety_json(data):
-    return pd.DataFrame(data['vulnerabilities'])
+    records = []
+    for item in data:
+        package, affected, installed, advisory, cve, advisory_url = item
+        records.append({
+            'package_name': package,
+            'affected_version': affected,
+            'installed_version': installed,
+            'advisory': advisory,
+            'cve': cve,
+            'advisory_url': advisory_url
+        })
+    df = pd.DataFrame(records)
+    return df
 
 def load_and_parse(file_path):
     with open(file_path) as f:
         data = json.load(f)
     df = parse_safety_json(data)
-    return df, data
-
-def generate_total_packages_pie_plot(data):
-    total_packages = len(data['scanned_packages'])
-    affected_packages = len(data['affected_packages'])
+    total_packages = len(df)
+    affected_packages = len(df[df['advisory'] != "No known vulnerabilities"])
     safe_packages = total_packages - affected_packages
-    labels = ['Affected Packages', 'Safe Packages']
-    sizes = [affected_packages, safe_packages]
-    plt.figure(figsize=(12, 8))
-    colors = ['#F57C00', '#66BB6A']
-    plt.pie(sizes, labels=labels, autopct='%1.0f%%', startangle=140, colors=colors)
-    plt.title('Vulnerable vs. Safe Packages', fontsize=15)
-    plt.tight_layout()
-    plt.gca().xaxis.set_major_formatter(plt.NullFormatter())
-    plt.savefig(os.path.join(images_path, 'total_packages_pie.png'), dpi=300)
+    safety_data = {
+        'total_packages': total_packages,
+        'affected_packages': affected_packages,
+        'safe_packages': safe_packages
+    }
+    return df, safety_data
 
+# Functions to generate plots
 def generate_vulnerable_vs_safe_pie_plot(df):
-    vulnerabilities = len(df)
-    safe = len(df[df['advisory'] == 'No known vulnerabilities'])
-    labels = ['Vulnerable', 'Safe']
-    sizes = [vulnerabilities, safe]
-    plt.figure(figsize=(12, 8))
-    colors = ['#FF9999', '#66B2FF']
-    plt.pie(sizes, labels=labels, autopct='%1.0f%%', startangle=140, colors=colors)
-    plt.title('Vulnerable vs. Safe Packages', fontsize=15)
+    total = len(df)
+    vulnerable = len(df[df['advisory'] != "No known vulnerabilities"])
+    safe = total - vulnerable
+    labels = ['Vulnerable Packages', 'Safe Packages']
+    sizes = [vulnerable, safe]
+    colors = ['#f44336', '#4CAF50']
+    plt.figure(figsize=(10, 6))
+    plt.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90)
+    plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+    plt.title("Vulnerable vs Safe Packages")
     plt.tight_layout()
-    plt.gca().xaxis.set_major_formatter(plt.NullFormatter())
     plt.savefig(os.path.join(images_path, 'vulnerable_vs_safe_pie.png'), dpi=300)
 
-def generate_vulnerabilities_per_package_plot(df):
-    vulnerability_counts = df['package_name'].value_counts()
-    plt.figure(figsize=(12, 8))
-    colors = sns.color_palette('Set3', len(vulnerability_counts))
-    patches, texts, autotexts = plt.pie(vulnerability_counts, labels=vulnerability_counts.index, autopct=lambda p: '{:.0f}'.format(p * sum(vulnerability_counts) / 100), startangle=140, colors=colors)
-    for text in texts:
-        text.set(color='black')
-    for autotext in autotexts:
-        autotext.set(color='black', weight='bold')
-    plt.title('Number of Vulnerabilities per Affected Package', fontsize=15)
+def generate_all_packages_pie_plot(df):
+    labels = df['package_name'].values
+    sizes = [1] * len(df)  # Since we want to represent each package equally
+    plt.figure(figsize=(10, 6))
+    plt.pie(sizes, labels=labels, startangle=90, colors=plt.cm.Paired.colors)
+    plt.axis('equal')
+    plt.title("All Analyzed Packages")
     plt.tight_layout()
-    plt.gca().xaxis.set_major_formatter(plt.NullFormatter())
+    plt.savefig(os.path.join(images_path, 'all_packages_pie.png'), dpi=300)
+
+def generate_vulnerabilities_per_package_pie_plot(df):
+    vulnerable_df = df[df['advisory'] != "No known vulnerabilities"]
+    counts = vulnerable_df['package_name'].value_counts()
+    labels = counts.index
+    sizes = counts.values
+    plt.figure(figsize=(10, 6))
+    plt.pie(sizes, labels=labels, startangle=90, autopct='%1.1f%%', colors=plt.cm.tab20c.colors)
+    plt.axis('equal')
+    plt.title("Number of Vulnerabilities per Affected Package")
+    plt.tight_layout()
     plt.savefig(os.path.join(images_path, 'vulnerabilities_per_package_pie.png'), dpi=300)
 
 def generate_all_plots_for_safety(file_path):
-    df, data = load_and_parse(file_path)
-    generate_total_packages_pie_plot(data)
+    df, safety_data = load_and_parse(file_path)
     generate_vulnerable_vs_safe_pie_plot(df)
-    generate_vulnerabilities_per_package_plot(df)
-    return df, data
+    generate_all_packages_pie_plot(df)
+    generate_vulnerabilities_per_package_pie_plot(df)
 
-# Generate the plots and get data for the template
-df_safety, safety_data = generate_all_plots_for_safety(file_path)
+# Main Execution
+generate_all_plots_for_safety(file_path)
 
 # Convert the images to data URLs
-total_packages_pie_data_url = get_image_as_data_url(os.path.join(images_path, 'total_packages_pie.png'))
 vulnerable_vs_safe_pie_data_url = get_image_as_data_url(os.path.join(images_path, 'vulnerable_vs_safe_pie.png'))
+all_packages_pie_data_url = get_image_as_data_url(os.path.join(images_path, 'all_packages_pie.png'))
 vulnerabilities_per_package_pie_data_url = get_image_as_data_url(os.path.join(images_path, 'vulnerabilities_per_package_pie.png'))
 
 env = Environment(loader=FileSystemLoader('./'))
 template = env.get_template(template_path)
 
+df, safety_data = load_and_parse(file_path)
+
 print("Rendering template...")
 html_content = template.render(
-    data=df_safety,
-    total_packages_pie=total_packages_pie_data_url,
-    vulnerable_vs_safe_pie=vulnerable_vs_safe_pie_data_url,
+    data=df,
+    total_packages_pie=all_packages_pie_data_url,
+    all_packages_pie=all_packages_pie_data_url,
     vulnerabilities_per_package_pie=vulnerabilities_per_package_pie_data_url
 )
 

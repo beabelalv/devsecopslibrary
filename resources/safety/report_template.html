@@ -23,7 +23,7 @@
         }
 
         .report-img {
-            width: 100%;
+            width: 48%;
             height: auto;
         }
 
@@ -79,14 +79,18 @@
 
     <h2>2. Summary</h2>
     <!-- Images for the statistics -->
-    <img class="report-img" src="{{ total_packages_pie }}" alt="Total Packages Analyzed">
-    <img class="report-img" src="{{ vulnerable_vs_safe_pie }}" alt="Vulnerable vs. Safe Packages">
-    <img class="report-img" src="{{ vulnerabilities_per_package_pie }}" alt="Vulnerabilities per Package">
+    <div class="img-container">
+        <img class="report-img" src="{{ total_packages_pie }}" alt="Total Packages Analyzed">
+        <img class="report-img" src="{{ all_packages_pie }}" alt="All Analyzed Packages">
+    </div>
+    <div class="img-container">
+        <img class="report-img" src="{{ vulnerabilities_per_package_pie }}" alt="Vulnerabilities per Package">
+    </div>
 
     <h2>3. Details</h2>
     <p>
         In this section, we provide detailed information about each vulnerability found by the Safety tool.
-        This includes the package name, the installed version, a description of the vulnerability, and a link to more information about how to fix it.
+        This includes the package name, the installed version, a description of the vulnerability, the associated CVE, and a link to more information about how to fix it.
     </p>
     
     <table>
@@ -95,6 +99,7 @@
                 <th>Package Name</th>
                 <th>Installed Version</th>
                 <th>Vulnerability</th>
+                <th>CVE</th>
                 <th>More Info</th>
             </tr>
         </thead>
@@ -104,6 +109,7 @@
                 <td>{{ row.package_name }}</td>
                 <td>{{ row.installed_version }}</td>
                 <td>{{ row.advisory }}</td>
+                <td>{{ row.cve }}</td>
                 <td><a href="{{ row.advisory_url }}">Link</a></td>
             </tr>
             {% endfor %}
