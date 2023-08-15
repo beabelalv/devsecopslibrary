@@ -1,4 +1,3 @@
-
 import argparse
 import json
 import os
@@ -25,10 +24,19 @@ def get_image_as_data_url(image_path):
         encoded_image = base64.b64encode(image_file.read()).decode()
     return f"data:image/png;base64,{encoded_image}"
 
-def load_and_parse_safety(file_path):
-    with open(file_path, 'r') as f:
-        data = json.load(f)
-    df = pd.DataFrame(data)
+def parse_safety_json(data):
+    records = []
+    for entry in data:
+        package_name = entry[0]
+        affected_version = entry[2]
+        installed_version = entry[3]
+        advisory = entry[4]
+        cve = entry[5] if len(entry) > 5 else None  # There might be no CVE
+        advisory_url = entry[6] if len(entry) > 6 else None  # Some entries might not have URLs
+        
+        records.append([package_name, affected_version, installed_version, advisory, cve, advisory_url])
+
+    df = pd.DataFrame(records, columns=['package_name', 'affected_version', 'installed_version', 'advisory', 'cve', 'advisory_url'])
     return df
 
 def generate_analyzed_packages_pie(df):
@@ -77,30 +85,21 @@ def generate_vulnerabilities_per_package_plot(df):
     plt.tight_layout()
     plt.savefig(os.path.join(images_path, 'vuln_per_package.png'), dpi=300)
 
-# Main logic
 df = load_and_parse_safety(file_path)
-generate_analyzed_packages_pie(df)
-generate_vulnerable_vs_safe_pie(df)
-generate_vulnerabilities_per_package_plot(df)
-
-# Convert the images to data URL
-analyzed_packages_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'analyzed_packages_pie.png'))
-vulnerable_vs_safe_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'vulnerable_vs_safe_pie.png'))
-vuln_per_package_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'vuln_per_package.png'))
+generate_vulnerable_vs_safe_pie_plot(df)
+generate_vulnerabilities_per_package_bar_plot(df)
+generate_analyzed_packages_pie_chart(df)
 
 env = Environment(loader=FileSystemLoader('./'))
 template = env.get_template(template_path)
-
 print("Rendering template...")
 html_content = template.render(
     data=df,
-    analyzed_packages_plot=analyzed_packages_plot_data_url,
-    vulnerable_vs_safe_plot=vulnerable_vs_safe_plot_data_url,
-    vuln_per_package_plot=vuln_per_package_plot_data_url
+    vulnerable_vs_safe_plot=get_image_as_data_url(os.path.join(images_path, 'vulnerable_vs_safe.png')),
+    vulnerabilities_per_package_plot=get_image_as_data_url(os.path.join(images_path, 'vulnerabilities_per_package.png')),
+    analyzed_packages_plot=get_image_as_data_url(os.path.join(images_path, 'analyzed_packages.png'))
 )
-
 print("Writing HTML content to file...")
 with open('./safety/safety-report.html', 'w') as f:
     f.write(html_content)
-
 print("Finished writing file.")
