@@ -2,100 +2,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
     <title>Safety Report</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-            line-height: 1.6;
-            background-color: #f2f2f2;
-        }
-
-        h1 {
-            color: #333;
-        }
-
-        h2, h3 {
-            color: #555;
-        }
-
-        .report-img {
-            width: 48%;
-            height: auto;
-            margin-right: 2%;
-            vertical-align: top;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-
-        th, td {
-            border: none;
-            padding: 8px;
-            text-align: left;
-            background: transparent;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        .affected {
-            background: linear-gradient(to right, #F44336, #B71C1C);
-        }
-
-        .safe {
-            background: linear-gradient(to right, #4CAF50, #388E3C);
-        }
+        body {font-family: Arial, sans-serif; margin:40px;}
+        table {border-collapse: collapse; width: 100%; border: 1px solid #ddd;}
+        th, td {border: 1px solid #ddd; padding: 8px;}
+        tr:nth-child(even) {background-color: #f2f2f2;}
+        th {padding-top: 12px; padding-bottom: 12px; text-align: left; background-color: #4CAF50; color: white;}
+        img {width: 45%; display: inline-block; margin: 2%;}
     </style>
 </head>
 <body>
-    <h1>Safety Report</h1>
+    <h2>Safety Report</h2>
+    <p>Report generated on: {{ timestamp }}</p>
 
-    <h2>1. Summary</h2>
-    <!-- Images for the pie charts -->
-    <img class="report-img" src="{{ total_packages_plot }}" alt="Total Packages Analyzed">
-    <img class="report-img" src="{{ vulnerable_vs_safe_plot }}" alt="Vulnerable vs Safe Packages">
-    <img class="report-img" src="{{ vulnerabilities_per_package_plot }}" alt="Vulnerabilities Per Affected Package">
+    <h3>Vulnerability Summary</h3>
+    <img src="{{ image_path }}/vulnerable_vs_safe_pie_plot.png" alt="Vulnerable vs Safe Packages">
+    <img src="{{ image_path }}/all_analyzed_packages_pie_plot.png" alt="All Analyzed Packages">
+    <img src="{{ image_path }}/vulnerabilities_per_affected_package.png" alt="Number of Vulnerabilities per Affected Package">
 
-    <h2>2. Details</h2>
-    <p>
-        In this section, we provide detailed information about each vulnerability found by the Safety tool.
-    </p>
-
+    <h3>Detail of Vulnerabilities</h3>
     <table>
-        <thead>
-            <tr>
-                <th>Package Name</th>
-                <th>Installed Version</th>
-                <th>Vulnerability Description</th>
-                <th>CVE</th>
-                <th>Advisory</th>
-                <th>More Info</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for index, row in data.iterrows() %}
-            <tr>
-                <td>{{ row.package_name }}</td>
-                <td>{{ row.installed_version }}</td>
-                <td>{{ row.vulnerability_description }}</td>
-                <td>{{ row.cve }}</td>
-                <td>{{ row.advisory }}</td>
-                <td><a href="{{ row.advisory_url }}">Link</a></td>
-            </tr>
-            {% endfor %}
-        </tbody>
+        <tr>
+            <th>Package Name</th>
+            <th>Installed Version</th>
+            <th>Affected Versions</th>
+            <th>CVE</th>
+            <th>Advisory</th>
+            <th>Advisory URL</th>
+        </tr>
+        {% for row in data %}
+        <tr>
+            <td>{{ row.package_name }}</td>
+            <td>{{ row.installed }}</td>
+            <td>{{ row.affected_versions }}</td>
+            <td>{{ row.CVE }}</td>
+            <td>{{ row.advisory }}</td>
+            <td><a href="{{ row.advisory_url }}" target="_blank">Link</a></td>
+        </tr>
+        {% endfor %}
     </table>
-
 </body>
 </html>
