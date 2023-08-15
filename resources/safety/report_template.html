@@ -23,16 +23,10 @@
         }
 
         .report-img {
-            width: 45%;  /* Adjusted width */
+            width: 48%;
             height: auto;
-            margin: 1%;
-        }
-
-        .img-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
+            margin-right: 2%;
+            vertical-align: top;
         }
 
         table {
@@ -55,26 +49,33 @@
             background-color: #f2f2f2;
         }
 
+        .affected {
+            background: linear-gradient(to right, #F44336, #B71C1C);
+        }
+
+        .safe {
+            background: linear-gradient(to right, #4CAF50, #388E3C);
+        }
     </style>
 </head>
 <body>
     <h1>Safety Report</h1>
 
-    <h2>Summary</h2>
-    <div class="img-container">
-        <img class="report-img" src="{{ total_packages_pie_plot }}" alt="Total Packages Analyzed">
-        <img class="report-img" src="{{ vulnerable_vs_safe_pie_plot }}" alt="Vulnerable vs Safe Packages">
-        <img class="report-img" src="{{ vulnerabilities_per_package_plot }}" alt="Vulnerabilities per Affected Package">
-    </div>
+    <h2>1. Summary</h2>
+    <!-- Images for the pie charts -->
+    <img class="report-img" src="{{ total_packages_plot }}" alt="Total Packages Analyzed">
+    <img class="report-img" src="{{ vulnerable_vs_safe_plot }}" alt="Vulnerable vs Safe Packages">
+    <img class="report-img" src="{{ vulnerabilities_per_package_plot }}" alt="Vulnerabilities Per Affected Package">
 
-    <h2>Details</h2>
+    <h2>2. Details</h2>
     <p>
         In this section, we provide detailed information about each vulnerability found by the Safety tool.
     </p>
+
     <table>
         <thead>
             <tr>
-                <th>Package</th>
+                <th>Package Name</th>
                 <th>Installed Version</th>
                 <th>Vulnerability Description</th>
                 <th>CVE</th>
@@ -83,7 +84,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for _, row in data.iterrows() %}
+            {% for index, row in data.iterrows() %}
             <tr>
                 <td>{{ row.package_name }}</td>
                 <td>{{ row.installed_version }}</td>
@@ -95,5 +96,6 @@
             {% endfor %}
         </tbody>
     </table>
+
 </body>
 </html>
