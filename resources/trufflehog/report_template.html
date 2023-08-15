@@ -9,28 +9,28 @@
             color: #333;
             margin: 0;
             padding: 20px;
-            line-height: 1.4; /* Reduced line height */
+            line-height: 1.5; /* Slightly increased line height */
             background-color: #f2f2f2;
         }
 
         h1 {
             color: #444;
-            font-size: 18px; /* Reduced font size */
+            font-size: 24px; /* Increased font size */
         }
 
         h2 {
             color: #555;
-            font-size: 16px; /* Reduced font size */
+            font-size: 20px; /* Increased font size */
         }
 
         h3 {
             color: #666;
-            font-size: 14px; /* Reduced font size */
+            font-size: 18px; /* Increased font size */
         }
 
         p {
             color: #777;
-            font-size: 12px; /* Reduced font size */
+            font-size: 16px; /* Increased font size */
         }
 
         .report-img {
@@ -51,29 +51,15 @@
 
         th, td {
             border: none;
-            padding: 6px;
+            padding: 8px;
             text-align: left;
             background: transparent;
             color: #777;
-            font-size: 12px; /* Consistent font size for the entire table */
+            font-size: 16px; /* Consistent font size for the entire table */
         }
 
         tr:nth-child(even) {
             background-color: #f2f2f2;
-        }
-
-        /* Styles for diff */
-        .diff-add {
-            color: green;
-        }
-
-        .diff-del {
-            color: red;
-        }
-
-        pre {
-            font-size: 12px; /* Reduced font size for diff */
-            margin: 0; /* Remove extra margin */
         }
     </style>
 </head>
@@ -100,7 +86,7 @@
                 <th>Commit</th>
                 <th>Date</th>
                 <th>Reason</th>
-                <th>Diff</th>
+                <th>Strings Found</th>
             </tr>
         </thead>
         <tbody>
@@ -110,19 +96,7 @@
                 <td>{{ row.commit }}</td>
                 <td>{{ row.date }}</td>
                 <td>{{ row.reason }}</td>
-                <td>
-                    <pre>
-                        {% for line in row.printDiff.splitlines() %}
-                            {% if line.startswith("+ ") %}
-                                <span class="diff-add">{{ line }}</span><br>
-                            {% elif line.startswith("- ") %}
-                                <span class="diff-del">{{ line }}</span><br>
-                            {% else %}
-                                {{ line }}<br>
-                            {% endif %}
-                        {% endfor %}
-                    </pre>
-                </td>
+                <td>{{ row.stringsFound | join(', ') }}</td> <!-- Display strings found -->
             </tr>
             {% endfor %}
         </tbody>
