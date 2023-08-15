@@ -80,7 +80,7 @@ def generate_html_report(file_path, template_path, output_path, image_path, data
 # Main execution
 if __name__ == '__main__':
     file_path = 'safety-results.json'
-    template_path = '/mnt/data/temp_report_template_modified.html'
+    template_path = '/mnt/data/temp_report_template.html'
     output_path = './safety/safety_report.html'
     df, data = generate_all_plots_for_safety(file_path)
     generate_html_report(file_path, template_path, output_path, images_path, df.to_dict(orient="records"))
