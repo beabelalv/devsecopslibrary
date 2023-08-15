@@ -27,13 +27,13 @@ def get_image_as_data_url(image_path):
     return f"data:image/png;base64,{encoded_image}"
 
 # Functions for Safety report generation
-def parse_safety_json_adjusted(data):
+def parse_safety_json(data):
     results = []
     for item in data['issues']:
         results.append(item)
     return pd.DataFrame(results)
 
-def load_and_parse_adjusted(file_path):
+def load_and_parse(file_path):
     with open(file_path) as f:
         data = json.load(f)
     df = parse_safety_json(data)
