@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Security Report</title>
+    <title>Safety Report</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -23,15 +23,16 @@
         }
 
         .report-img {
-            width: 48%;
+            width: 45%;  /* Adjusted width */
             height: auto;
+            margin: 1%;
         }
 
         .img-container {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
         }
 
         table {
@@ -54,67 +55,45 @@
             background-color: #f2f2f2;
         }
 
-        .low {
-            background: linear-gradient(to right, #FFEB3B, #FFC107);
-        }
-
-        .medium {
-            background: linear-gradient(to right, #FF9800, #FF5722);
-        }
-
-        .high {
-            background: linear-gradient(to right, #F44336, #B71C1C);
-        }
     </style>
 </head>
 <body>
-    <h1>Security Report</h1>
+    <h1>Safety Report</h1>
 
-    <h2>1. Safety</h2>
-    <p>
-        Safety is a comprehensive security analysis tool for Python applications.
-        It's designed to find common security vulnerabilities in Python packages.
-        Safety checks the installed Python packages against a database of known vulnerabilities.
-    </p>
-
-    <h2>2. Summary</h2>
-    <!-- Images for the statistics -->
+    <h2>Summary</h2>
     <div class="img-container">
-        <img class="report-img" src="{{ total_packages_pie }}" alt="Total Packages Analyzed">
-        <img class="report-img" src="{{ all_packages_pie }}" alt="All Analyzed Packages">
-    </div>
-    <div class="img-container">
-        <img class="report-img" src="{{ vulnerabilities_per_package_pie }}" alt="Vulnerabilities per Package">
+        <img class="report-img" src="{{ total_packages_pie_plot }}" alt="Total Packages Analyzed">
+        <img class="report-img" src="{{ vulnerable_vs_safe_pie_plot }}" alt="Vulnerable vs Safe Packages">
+        <img class="report-img" src="{{ vulnerabilities_per_package_plot }}" alt="Vulnerabilities per Affected Package">
     </div>
 
-    <h2>3. Details</h2>
+    <h2>Details</h2>
     <p>
         In this section, we provide detailed information about each vulnerability found by the Safety tool.
-        This includes the package name, the installed version, a description of the vulnerability, the associated CVE, and a link to more information about how to fix it.
     </p>
-    
     <table>
         <thead>
             <tr>
-                <th>Package Name</th>
+                <th>Package</th>
                 <th>Installed Version</th>
-                <th>Vulnerability</th>
+                <th>Vulnerability Description</th>
                 <th>CVE</th>
+                <th>Advisory</th>
                 <th>More Info</th>
             </tr>
         </thead>
         <tbody>
-            {% for index, row in data.iterrows() %}
+            {% for _, row in data.iterrows() %}
             <tr>
                 <td>{{ row.package_name }}</td>
                 <td>{{ row.installed_version }}</td>
-                <td>{{ row.advisory }}</td>
+                <td>{{ row.vulnerability_description }}</td>
                 <td>{{ row.cve }}</td>
+                <td>{{ row.advisory }}</td>
                 <td><a href="{{ row.advisory_url }}">Link</a></td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-
 </body>
 </html>
