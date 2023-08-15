@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Safety Security Report</title>
+    <title>Security Report</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -23,7 +23,7 @@
         }
 
         .report-img {
-            width: 48%;
+            width: 100%;
             height: auto;
         }
 
@@ -53,57 +53,62 @@
         tr:nth-child(even) {
             background-color: #f2f2f2;
         }
+
+        .low {
+            background: linear-gradient(to right, #FFEB3B, #FFC107);
+        }
+
+        .medium {
+            background: linear-gradient(to right, #FF9800, #FF5722);
+        }
+
+        .high {
+            background: linear-gradient(to right, #F44336, #B71C1C);
+        }
     </style>
 </head>
 <body>
-    <h1>Safety Security Report</h1>
+    <h1>Security Report</h1>
 
-    <h2>1. Overview</h2>
+    <h2>1. Safety</h2>
     <p>
-        Safety is a tool that checks for known security vulnerabilities in Python packages.
+        Safety is a comprehensive security analysis tool for Python applications.
+        It's designed to find common security vulnerabilities in Python packages.
+        Safety checks the installed Python packages against a database of known vulnerabilities.
     </p>
 
     <h2>2. Summary</h2>
-    <!-- First row of images -->
-    <div class="img-container">
-        <img class="report-img" src="{{ total_packages_pie }}" alt="Total Packages Analyzed">
-        <img class="report-img" src="{{ vulnerable_vs_safe_pie }}" alt="Vulnerable vs. Safe Packages">
-    </div>
-
-    <!-- Margin between the rows -->
-    <div style="margin: 30px 0;"></div>
-
-    <!-- Second row of images -->
-    <div class="img-container">
-        <img class="report-img" src="{{ vulnerabilities_per_package_pie }}" alt="Vulnerabilities per Affected Package">
-    </div>
+    <!-- Images for the statistics -->
+    <img class="report-img" src="{{ total_packages_pie }}" alt="Total Packages Analyzed">
+    <img class="report-img" src="{{ vulnerable_vs_safe_pie }}" alt="Vulnerable vs. Safe Packages">
+    <img class="report-img" src="{{ vulnerabilities_per_package_pie }}" alt="Vulnerabilities per Package">
 
     <h2>3. Details</h2>
     <p>
-        Detailed information about each vulnerability found by the Safety tool.
+        In this section, we provide detailed information about each vulnerability found by the Safety tool.
+        This includes the package name, the installed version, a description of the vulnerability, and a link to more information about how to fix it.
     </p>
-
+    
     <table>
         <thead>
             <tr>
                 <th>Package Name</th>
-                <th>Current Version</th>
-                <th>Affected Version</th>
-                <th>Vulnerability ID</th>
-                <th>Description</th>
+                <th>Installed Version</th>
+                <th>Vulnerability</th>
+                <th>More Info</th>
             </tr>
         </thead>
         <tbody>
             {% for index, row in data.iterrows() %}
             <tr>
                 <td>{{ row.package_name }}</td>
-                <td>{{ row.package_version }}</td>
-                <td>{{ row.affected_version }}</td>
-                <td>{{ row.vulnerability_id }}</td>
-                <td>{{ row.vulnerability_description }}</td>
+                <td>{{ row.installed_version }}</td>
+                <td>{{ row.advisory }}</td>
+                <td><a href="{{ row.advisory_url }}">Link</a></td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+
 </body>
 </html>

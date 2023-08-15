@@ -80,9 +80,10 @@ def generate_all_plots_for_safety(file_path):
     generate_total_packages_pie_plot(data)
     generate_vulnerable_vs_safe_pie_plot(df)
     generate_vulnerabilities_per_package_plot(df)
+    return df, data
 
-# Generate the plots
-generate_all_plots_for_safety(file_path)
+# Generate the plots and get data for the template
+df_safety, safety_data = generate_all_plots_for_safety(file_path)
 
 # Convert the images to data URLs
 total_packages_pie_data_url = get_image_as_data_url(os.path.join(images_path, 'total_packages_pie.png'))
@@ -94,7 +95,7 @@ template = env.get_template(template_path)
 
 print("Rendering template...")
 html_content = template.render(
-    data=df,
+    data=df_safety,
     total_packages_pie=total_packages_pie_data_url,
     vulnerable_vs_safe_pie=vulnerable_vs_safe_pie_data_url,
     vulnerabilities_per_package_pie=vulnerabilities_per_package_pie_data_url
