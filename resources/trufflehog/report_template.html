@@ -34,7 +34,7 @@
         }
 
         .report-img {
-            width: 60%; /* Adjusted image size */
+            width: 60%;
             height: auto;
             display: block;
             margin: 20px auto;
@@ -54,12 +54,21 @@
             padding: 8px;
             text-align: left;
             background: transparent;
-            color: #777; /* Adjusted font color for better readability */
-            font-size: 15px; /* Adjusted font size */
+            color: #777;
+            font-size: 16px; /* Consistent font size for the entire table */
         }
 
         tr:nth-child(even) {
             background-color: #f2f2f2;
+        }
+
+        /* Styles for diff */
+        .diff-add {
+            color: green;
+        }
+
+        .diff-del {
+            color: red;
         }
     </style>
 </head>
@@ -96,7 +105,19 @@
                 <td>{{ row.commit }}</td>
                 <td>{{ row.date }}</td>
                 <td>{{ row.reason }}</td>
-                <td><pre>{{ row.printDiff }}</pre></td>
+                <td>
+                    <pre>
+                        {% for line in row.printDiff.splitlines() %}
+                            {% if line.startswith("+") %}
+                                <span class="diff-add">{{ line }}</span><br>
+                            {% elif line.startswith("-") %}
+                                <span class="diff-del">{{ line }}</span><br>
+                            {% else %}
+                                {{ line }}<br>
+                            {% endif %}
+                        {% endfor %}
+                    </pre>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
