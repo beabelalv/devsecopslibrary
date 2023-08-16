@@ -42,7 +42,7 @@ def generate_packages_summary_plot(data):
     sizes = [affected_packages, safe_packages]
     plt.figure(figsize=(12, 8))
     colors = ['#F57C00', '#66BB6A']
-    plt.pie(sizes, labels=labels, autopct='%1.0f%%', labeldistance=1.1, textprops={'fontsize': 14}, startangle=140, colors=colors)
+    plt.pie(sizes, labels=labels, autopct='%1.0f%%', labeldistance=1.1, textprops={'fontsize': 18}, startangle=140, colors=colors)
     plt.title('Summary of Packages', fontsize=20)
     plt.tight_layout()
     plt.gca().xaxis.set_major_formatter(plt.NullFormatter())
