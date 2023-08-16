@@ -99,12 +99,12 @@
             </tr>
         </thead>
         <tbody>
-            {% for row in data %}
+            {% for index, row in data.iterrows() %}
             <tr>
-                <td>{{ row['package_name'] }}</td>
-                <td>{{ row['analyzed_version'] }}</td>
-                <td>{{ row['advisory'] }}</td>
-                <td><a href="{{ row['more_info_url'] }}">Link</a></td>
+                <td>{{ row.package_name }}</td>
+                <td>{{ row.analyzed_version }}</td>
+                <td>{{ row.advisory }}</td>
+                <td><a href="{{ row.more_info_url }}">Link</a></td>
             </tr>
             {% endfor %}
         </tbody>
