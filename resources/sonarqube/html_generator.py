@@ -18,7 +18,7 @@ hotspots_file_path = args.hotspots_file_path
 template_path = args.template_path
 
 # Define the path for images
-images_path = 'sonarqube/images/'
+images_path = './sonarqube/images/'
 os.makedirs(images_path, exist_ok=True)
 
 def get_image_as_data_url(image_path):
@@ -26,80 +26,82 @@ def get_image_as_data_url(image_path):
         encoded_image = base64.b64encode(image_file.read()).decode()
     return f"data:image/png;base64,{encoded_image}"
 
-def load_json(file_path, key):
+def load_json_issues(file_path):
     with open(file_path) as f:
         data = json.load(f)
-    return pd.json_normalize(data[key])
+    return pd.json_normalize(data['issues'])
+
+def load_json_hotspots(file_path):
+    with open(file_path) as f:
+        data = json.load(f)
+    return pd.json_normalize(data['hotspots'])
 
 # Functions to generate plots
 def generate_severity_plot(df):
-    severity_counts = df['severity'].value_counts()
-    plt.figure(figsize=(20, 12))
-    bars = plt.bar(severity_counts.index, severity_counts.values, color=['#FF9800', '#F44336', '#FFEB3B'])
+    plt.figure(figsize=(10, 5))
+    sns.countplot(data=df, x='severity', order=['BLOCKER', 'CRITICAL', 'MAJOR', 'MINOR', 'INFO'])
     plt.title('Number of Issues per Severity Level')
     plt.xlabel('Severity Level')
-    plt.ylabel('Number of Issues')
+    plt.ylabel('Count')
     plt.tight_layout()
     plt.savefig(os.path.join(images_path, 'severity_counts.png'))
 
 def generate_file_plot(df):
+    plt.figure(figsize=(10, 5))
     file_counts = df['component'].value_counts().head(10)
-    plt.figure(figsize=(20, 12))
-    bars = plt.barh(file_counts.index, file_counts.values, color=sns.color_palette("viridis", 10))
+    file_counts.plot(kind='barh', color='skyblue')
     plt.title('Top 10 Components with Most Issues')
-    plt.xlabel('Number of Issues')
-    plt.ylabel('Components')
+    plt.xlabel('Count')
+    plt.ylabel('Component')
+    plt.gca().invert_yaxis()
     plt.tight_layout()
     plt.savefig(os.path.join(images_path, 'file_counts.png'))
 
-def generate_issue_type_plot(df):
-    issue_type_counts = df['type'].value_counts()
-    plt.figure(figsize=(20, 12))
-    bars = plt.bar(issue_type_counts.index, issue_type_counts.values, color=sns.color_palette("coolwarm", len(issue_type_counts)))
-    plt.title('Distribution of Issue Types')
-    plt.xlabel('Issue Type')
-    plt.ylabel('Number of Issues')
+def generate_issue_type_hotspot_plot(df_issues, total_hotspots):
+    plt.figure(figsize=(10, 5))
+    types = df_issues['type'].value_counts()
+    types['SECURITY_HOTSPOT'] = total_hotspots
+    types.plot(kind='pie', autopct='%1.1f%%')
+    plt.title('Distribution of Issue Types and Total Security Hotspots')
+    plt.ylabel('')
     plt.tight_layout()
     plt.savefig(os.path.join(images_path, 'issue_type_counts.png'))
 
 def generate_category_plot(df):
-    category_counts = df['securityCategory'].value_counts()
-    plt.figure(figsize=(20, 12))
-    bars = plt.bar(category_counts.index, category_counts.values, color=sns.color_palette("Set2", len(category_counts)))
+    plt.figure(figsize=(10, 5))
+    df['category'].value_counts().plot(kind='pie', autopct='%1.1f%%')
     plt.title('Number of Hotspots per Security Category')
-    plt.xlabel('Security Category')
-    plt.ylabel('Number of Hotspots')
+    plt.ylabel('')
     plt.tight_layout()
     plt.savefig(os.path.join(images_path, 'category_counts.png'))
 
 def generate_vulnerability_prob_plot(df):
-    vulnerability_prob_counts = df['vulnerabilityProbability'].value_counts()
-    plt.figure(figsize=(20, 12))
-    bars = plt.bar(vulnerability_prob_counts.index, vulnerability_prob_counts.values, color=sns.color_palette("cool", len(vulnerability_prob_counts)))
+    plt.figure(figsize=(10, 5))
+    df['vulnerabilityProbability'].value_counts().plot(kind='pie', autopct='%1.1f%%')
     plt.title('Distribution of Hotspots by Vulnerability Probability')
-    plt.xlabel('Vulnerability Probability')
-    plt.ylabel('Number of Hotspots')
+    plt.ylabel('')
     plt.tight_layout()
     plt.savefig(os.path.join(images_path, 'vulnerability_prob_counts.png'))
 
 def generate_hotspot_file_plot(df):
-    hotspot_file_counts = df['component'].value_counts().head(10)
-    plt.figure(figsize=(20, 12))
-    bars = plt.barh(hotspot_file_counts.index, hotspot_file_counts.values, color=sns.color_palette("magma", 10))
+    plt.figure(figsize=(10, 5))
+    hotspot_counts = df['component'].value_counts().head(10)
+    hotspot_counts.plot(kind='barh', color='lightcoral')
     plt.title('Top 10 Components with Most Hotspots')
-    plt.xlabel('Number of Hotspots')
-    plt.ylabel('Components')
+    plt.xlabel('Count')
+    plt.ylabel('Component')
+    plt.gca().invert_yaxis()
     plt.tight_layout()
     plt.savefig(os.path.join(images_path, 'hotspot_file_counts.png'))
 
 # Main
-df_issues = load_json(issues_file_path, 'issues')
-df_hotspots = load_json(hotspots_file_path, 'hotspots')
+df_issues = load_json_issues(issues_file_path)
+df_hotspots = load_json_hotspots(hotspots_file_path)
 
 # Generate all plots
 generate_severity_plot(df_issues)
 generate_file_plot(df_issues)
-generate_issue_type_plot(df_issues)
+generate_issue_type_hotspot_plot(df_issues, len(df_hotspots))
 generate_category_plot(df_hotspots)
 generate_vulnerability_prob_plot(df_hotspots)
 generate_hotspot_file_plot(df_hotspots)
@@ -127,7 +129,7 @@ html_content = template.render(
 )
 
 # Save the rendered content to an HTML file
-with open('sonarqube/sonarqube-report.html', 'w') as f:
+with open('./sonarqube/sonarqube-report.html', 'w') as f:
     f.write(html_content)
 
 print("Finished writing file.")
