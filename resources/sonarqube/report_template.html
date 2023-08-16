@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>SonarQube Security Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        h2, h3 {
+            color: #555;
+        }
+
+        .report-img {
+            width: 48%;
+            height: auto;
+        }
+
+        .img-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        th, td {
+            border: none;
+            padding: 8px;
+            text-align: left;
+            background: transparent;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>SonarQube Security Report</h1>
+
+    <h2>1. SonarQube Overview</h2>
+    <p>
+        SonarQube is a static code analysis tool used to identify bugs and suspicious code patterns in the source code.
+        This report provides insights into the security-related findings of the SonarQube scan.
+    </p>
+
+    <h2>2. Issues</h2>
+    <h3>Visualizations</h3>
+    <div class="img-container">
+        <img class="report-img" src="{{ severity_plot }}" alt="Severity Count">
+        <img class="report-img" src="{{ component_plot }}" alt="Component Count">
+        <img class="report-img" src="{{ type_distribution_plot }}" alt="Issue Type Distribution">
+    </div>
+
+    <h2>3. Security Hotspots</h2>
+    <h3>Visualizations</h3>
+    <div class="img-container">
+        <img class="report-img" src="{{ security_category_plot }}" alt="Security Category Count">
+        <img class="report-img" src="{{ vulnerability_distribution_plot }}" alt="Vulnerability Probability Distribution">
+        <img class="report-img" src="{{ component_hotspots_plot }}" alt="Component Hotspot Count">
+    </div>
+</body>
+</html>
