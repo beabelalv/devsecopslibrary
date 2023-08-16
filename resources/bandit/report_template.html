@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,7 +22,7 @@
         }
 
         .report-img {
-            width: 100%;
+            width: 48%;
             height: auto;
         }
 
@@ -70,45 +69,59 @@
 <body>
     <h1>Security Report</h1>
 
-    <h2>1. Safety</h2>
+    <h2>1. Bandit</h2>
     <p>
-        Safety is a comprehensive security analysis tool for Python applications.
-        It's designed to find common security vulnerabilities in Python packages.
-        Safety checks the installed Python packages against a database of known vulnerabilities.
+        Bandit is a comprehensive security analysis tool for Python applications.
+        It's designed to find common security issues in Python code, such as insecure function calls or hardcoded passwords.
+        Bandit works by analyzing the Abstract Syntax Tree (AST) of the Python code to find patterns that could indicate potential security issues.
     </p>
 
     <h2>2. Summary</h2>
-    <!-- Images for the statistics -->
-    <img class="report-img" src="{{ total_packages_pie }}" alt="Total Packages Analyzed">
-    <img class="report-img" src="{{ vulnerable_vs_safe_pie }}" alt="Vulnerable vs. Safe Packages">
-    <img class="report-img" src="{{ vulnerabilities_per_package_pie }}" alt="Vulnerabilities per Package">
+    <!-- First row of images -->
+    <img class="report-img" src="{{ severity_plot }}" alt="Severity Count">
+    <img class="report-img" src="{{ file_plot }}" alt="File Count">
+
+    <!-- Margin between the rows -->
+    <div style="margin: 30px 0;"></div>
+
+    <!-- Second row of images -->
+    <img class="report-img" src="{{ issue_type_plot }}" alt="Issue Type Count">
+    <img class="report-img" src="{{ confidence_level_plot }}" alt="Confidence Level Count">
 
     <h2>3. Details</h2>
     <p>
-        In this section, we provide detailed information about each vulnerability found by the Safety tool.
-        This includes the package name, the installed version, a description of the vulnerability, and a link to more information about how to fix it.
+        In this section, we provide detailed information about each vulnerability found by the Bandit tool.
+        This includes the file where the issue was found, the line number, a description of the issue, the severity and confidence levels, and a link to more information about how to fix it.
     </p>
-    
-    <table>
-        <thead>
-            <tr>
-                <th>Package Name</th>
-                <th>Installed Version</th>
-                <th>Vulnerability</th>
-                <th>More Info</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for row in data %}
-            <tr>
-                <td>{{ row['package_name'] }}</td>
-                <td>{{ row['analyzed_version'] }}</td>
-                <td>{{ row['advisory'] }}</td>
-                <td><a href="{{ row['more_info_url'] }}">Link</a></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
 
+    {% for severity in ['LOW', 'MEDIUM', 'HIGH'] %}
+        <h3>{{ severity }} Severity</h3>
+        <table>
+            <thead class="{{ severity|lower }}">
+                <tr>
+                    <th>File</th>
+                    <th>Line Number</th>
+                    <th>Code</th>
+                    <th>Description</th>
+                    <th>CWE</th>
+                    <th>Confidence</th>
+                    <th>More Info</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for index, row in data[data.issue_severity == severity].iterrows() %}
+                <tr>
+                    <td>{{ row.filename }}</td>
+                    <td>{{ row.line_number }}</td>
+                    <td><pre>{{ row.code }}</pre></td>
+                    <td>{{ row.issue_text }}</td>
+                    <td>{{ row.cwe_id }}</td>
+                    <td>{{ row.issue_confidence }}</td>
+                    <td><a href="{{ row.more_info }}">Link</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
 </body>
 </html>
