@@ -52,8 +52,10 @@ def generate_vulnerabilities_per_package_plot(df):
     vulnerability_counts = df['package_name'].value_counts()
     plt.figure(figsize=(12, 8))
     colors = sns.color_palette('Set3', len(vulnerability_counts))
-    patches, texts, autotexts = plt.pie(vulnerability_counts, labels=vulnerability_counts.index, autopct=lambda p: '{:.0f}'.format(p * sum(vulnerability_counts) / 100), startangle=140, colors=colors)
+    patches, texts, autotexts = plt.pie(vulnerability_counts, labels=vulnerability_counts.index, autopct=lambda p: '{:.0f}'.format(p * sum(vulnerability_counts) / 100), startangle=140, colors=colors, labeldistance=1.1, textprops={'fontsize': 12})
     for text in texts:
+        if len(text.get_text()) > 15:
+            text.set_text(text.get_text()[:12] + "...")
         text.set(color='black')
     for autotext in autotexts:
         autotext.set(color='black', weight='bold')
