@@ -1,4 +1,3 @@
-// generateSonarQubeReport.groovy
 def call() {
     // Load the Python script
     loadScript(name: 'html_generator.py', path: 'sonarqube/html_generator.py')
