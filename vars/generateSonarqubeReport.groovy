@@ -1,12 +1,11 @@
 def call(Map config = [:]) {
-    // Default values
-    def issuesJson = config.issuesJson ?: 'sonarqube_open_issues.json'
-    def hotspotsJson = config.hotspotsJson ?: 'sonarqube_open_hotspots.json'
-    def scriptPath = config.scriptPath ?: 'sonarqube/html_generator.py'
-
     // Load the Python script
-    loadScript(name: 'html_generator.py', path: scriptPath)
+    loadScript(name: 'sonarqube_html_generator.py', path: 'sonarqube/sonarqube_html_generator.py')
     
-    // Call the Python script with the JSON file paths
-    sh "python ./html_generator.py ${issuesJson} ${hotspotsJson}"
+    // Load the HTML template
+    def tempTemplateFile = 'temp_sonarqube_report_template.html'
+    loadScript(name: tempTemplateFile, path: 'sonarqube/sonarqube_report_template.html')
+    
+    // Call the Python script with the JSON files and temporary HTML template file paths
+    sh "python ./sonarqube_html_generator.py ${config.issues_json} ${config.hotspots_json} ${tempTemplateFile}"
 }
