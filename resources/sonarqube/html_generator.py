@@ -63,7 +63,7 @@ def generate_issue_type_plot(df):
     plt.savefig(os.path.join(images_path, 'issue_type_counts.png'))
 
 def generate_category_plot(df):
-    category_counts = df['category'].value_counts()
+    category_counts = df['securityCategory'].value_counts()
     plt.figure(figsize=(20, 12))
     bars = plt.bar(category_counts.index, category_counts.values, color=sns.color_palette("Set2", len(category_counts)))
     plt.title('Number of Hotspots per Security Category')
