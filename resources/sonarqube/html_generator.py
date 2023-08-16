@@ -59,7 +59,7 @@ def generate_hotspot_file_plot(df):
 
 # Main
 df_issues = load_json(issues_file_path)
-df_hotspots = load_json(hotspots_file_path)
+df_hotspots = pd.json_normalize(data['hotspots'])
 
 # Generate all plots
 generate_severity_plot(df_issues)
