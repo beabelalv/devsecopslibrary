@@ -41,7 +41,7 @@ def generate_packages_summary_plot(data):
     labels = ['Affected Packages', 'Safe Packages']
     sizes = [affected_packages, safe_packages]
     plt.figure(figsize=(12, 8))
-    colors = ['#F57C00', '#66BB6A']
+    colors = ['#f72d2a', '#66BB6A']
     plt.pie(sizes, labels=labels, autopct='%1.0f%%', labeldistance=1.1, textprops={'fontsize': 18}, startangle=140, colors=colors)
     plt.title('Summary of Packages', fontsize=20)
     plt.tight_layout()
@@ -52,7 +52,7 @@ def generate_vulnerabilities_per_package_plot(df):
     vulnerability_counts = df['package_name'].value_counts()
     plt.figure(figsize=(12, 8))
     colors = sns.color_palette('Set3', len(vulnerability_counts))
-    patches, texts, autotexts = plt.pie(vulnerability_counts, labels=vulnerability_counts.index, autopct=lambda p: '{:.0f}'.format(p * sum(vulnerability_counts) / 100), startangle=140, colors=colors, labeldistance=1.1, textprops={'fontsize': 12})
+    patches, texts, autotexts = plt.pie(vulnerability_counts, labels=vulnerability_counts.index, autopct=lambda p: '{:.0f}'.format(p * sum(vulnerability_counts) / 100), startangle=140, colors=colors, labeldistance=1.1, textprops={'fontsize': 18})
     for text in texts:
         if len(text.get_text()) > 15:
             text.set_text(text.get_text()[:12] + "...")
