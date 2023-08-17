@@ -61,7 +61,7 @@ def generate_file_plot(df):
     file_counts = df['filename'].value_counts()
     plt.figure(figsize=(20, 12))
     plt.rcParams.update({'font.size': 24})  # Increase the font size
-    sns.barplot(y=file_counts.index[:10], x=file_counts.values[:10], palette=sns.color_palette(["#757575", "#BDBDBD"]), orient='h')
+    sns.barplot(y=file_counts.index[:10], x=file_counts.values[:10], palette=sns.color_palette(['#66BB6A', '#1f77b4', '#66bba2', '#ff7f0e']), orient='h')
     plt.title('Number of Issues per File (Top 10)', fontsize=28)
     plt.xlabel('Number of Issues', fontsize=24)
     plt.ylabel('File', fontsize=24)
@@ -73,7 +73,7 @@ def generate_file_plot(df):
 def generate_confidence_plot(df):
     confidence_counts = df['issue_confidence'].value_counts()
     plt.figure(figsize=(20, 12))
-    sns.barplot(x=confidence_counts.index, y=confidence_counts.values, palette='coolwarm')
+    sns.barplot(x=confidence_counts.index, y=confidence_counts.values, palette=sns.color_palette(['#66BB6A', '#1f77b4', '#66bba2', '#ff7f0e'])
     plt.title('Number of Issues per Confidence Level')
     plt.xlabel('Confidence Level')
     plt.ylabel('Number of Issues')
