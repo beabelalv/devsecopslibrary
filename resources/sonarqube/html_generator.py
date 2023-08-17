@@ -37,7 +37,7 @@ def generate_severity_plot(df):
     colors = {
         'CRITICAL': '#f72d2a',  # red
         'MAJOR': '#ff7f0e',    # orange
-        'MINOR': '#d1ca6f'     # Muted yellow
+        'MINOR': '#e3de44'     # Muted yellow
     }
     bar_colors = [colors.get(severity) for severity in severity_counts.index]
     
@@ -66,7 +66,7 @@ def generate_file_plot(df):
 def generate_category_plot(df):
     category_counts = df['securityCategory'].value_counts()
     plt.figure(figsize=(20, 12))
-    category_counts.plot.pie(autopct="%.1f%%", colors=sns.color_palette(['#66BB6A', '#1f77b4', '#66bba2'], len(category_counts)), startangle=90, fontsize=22, textprops={'fontsize': 20})
+    category_counts.plot.pie(autopct="%.1f%%", colors=sns.color_palette(['#66BB6A', '#1f77b4', '#ff7f0e', '#66bba2'], len(category_counts)), startangle=90, fontsize=22, textprops={'fontsize': 20})
     plt.title('Number of Hotspots per Security Category', fontsize=28)
     plt.tight_layout()
     plt.savefig(os.path.join(images_path, 'category_counts.png'))
