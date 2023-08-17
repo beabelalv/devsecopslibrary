@@ -54,7 +54,7 @@ def generate_severity_plot(df):
 def generate_file_plot(df):
     file_counts = df['component'].value_counts().head(10)
     plt.figure(figsize=(20, 12))
-    bars = plt.barh(file_counts.index, file_counts.values, color=sns.color_palette(['#66BB6A', '#1f77b4', '#ff7f0e'], 10))
+    bars = plt.barh(file_counts.index, file_counts.values, color=sns.color_palette(['#66BB6A', '#1f77b4', '#66bba2'], 10))
     plt.title('Top 10 Components with Most Issues', fontsize=28)
     plt.xlabel('Number of Issues', fontsize=22)
     plt.ylabel('Components', fontsize=22)
@@ -66,7 +66,7 @@ def generate_file_plot(df):
 def generate_category_plot(df):
     category_counts = df['securityCategory'].value_counts()
     plt.figure(figsize=(20, 12))
-    category_counts.plot.pie(autopct="%.1f%%", colors=sns.color_palette(['#66BB6A', '#1f77b4', '#ff7f0e'], len(category_counts)), startangle=90, fontsize=22, textprops={'fontsize': 20})
+    category_counts.plot.pie(autopct="%.1f%%", colors=sns.color_palette(['#66BB6A', '#1f77b4', '#66bba2'], len(category_counts)), startangle=90, fontsize=22, textprops={'fontsize': 20})
     plt.title('Number of Hotspots per Security Category', fontsize=28)
     plt.tight_layout()
     plt.savefig(os.path.join(images_path, 'category_counts.png'))
@@ -74,7 +74,7 @@ def generate_category_plot(df):
 def generate_issue_type_plot(df):
     issue_type_counts = df['type'].value_counts()
     plt.figure(figsize=(20, 12))
-    issue_type_counts.plot.pie(autopct="%.1f%%", colors=sns.color_palette(['#66BB6A', '#1f77b4', '#ff7f0e'], len(issue_type_counts)), startangle=90, fontsize=22, textprops={'fontsize': 20})
+    issue_type_counts.plot.pie(autopct="%.1f%%", colors=sns.color_palette(['#66BB6A', '#1f77b4', '#66bba2'], len(issue_type_counts)), startangle=90, fontsize=22, textprops={'fontsize': 20})
     plt.title('Distribution of Issue Types', fontsize=28)
     plt.tight_layout()
     plt.savefig(os.path.join(images_path, 'issue_type_counts.png'))
@@ -94,7 +94,7 @@ def generate_vulnerability_prob_plot(df):
 def generate_hotspot_file_plot(df):
     hotspot_file_counts = df['component'].value_counts().head(10)
     plt.figure(figsize=(20, 12))
-    bars = plt.barh(hotspot_file_counts.index, hotspot_file_counts.values, color=sns.color_palette(['#66BB6A', '#1f77b4', '#ff7f0e'], 10))
+    bars = plt.barh(hotspot_file_counts.index, hotspot_file_counts.values, color=sns.color_palette(['#66BB6A', '#1f77b4', '#66bba2'], 10))
     plt.title('Top 10 Components with Most Hotspots', fontsize=28)
     plt.xlabel('Number of Hotspots', fontsize=22)
     plt.ylabel('Components', fontsize=22)
