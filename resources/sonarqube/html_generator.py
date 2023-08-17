@@ -35,9 +35,9 @@ def load_json(file_path, key):
 def generate_severity_plot(df):
     severity_counts = df['severity'].value_counts()
     colors = {
-        'CRITICAL': '#e41a1c',  # Red
-        'MAJOR': '#ff7f00',    # Orange
-        'MINOR': '#ffff33'     # Yellow
+        'CRITICAL': '#a31415',  # Red
+        'MAJOR': '#b86614',    # Orange
+        'MINOR': '#eded42'     # Yellow
     }
     bar_colors = [colors.get(severity, color) for severity, color in zip(severity_counts.index, sns.color_palette("Paired", len(severity_counts)))]
     
