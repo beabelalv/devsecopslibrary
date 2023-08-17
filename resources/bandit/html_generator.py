@@ -73,7 +73,7 @@ def generate_file_plot(df):
 def generate_confidence_plot(df):
     confidence_counts = df['issue_confidence'].value_counts()
     plt.figure(figsize=(20, 12))
-    sns.barplot(x=confidence_counts.index, y=confidence_counts.values, palette=sns.color_palette(['#66BB6A', '#1f77b4', '#66bba2', '#ff7f0e'])
+    sns.barplot(x=confidence_counts.index, y=confidence_counts.values, palette=sns.color_palette(['#66BB6A', '#1f77b4', '#66bba2', '#ff7f0e']))
     plt.title('Number of Issues per Confidence Level')
     plt.xlabel('Confidence Level')
     plt.ylabel('Number of Issues')
