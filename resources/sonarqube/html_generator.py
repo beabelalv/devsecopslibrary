@@ -54,7 +54,7 @@ def generate_severity_plot(df):
 def generate_file_plot(df):
     file_counts = df['component'].value_counts().head(10)
     plt.figure(figsize=(20, 12))
-    bars = plt.barh(file_counts.index, file_counts.values, color=sns.color_palette(['#66BB6A', '#1f77b4', '#66bba2'], 10))
+    bars = plt.barh(file_counts.index, file_counts.values, color=sns.color_palette(['#66BB6A', '#1f77b4', '#66bba2', '#ff7f0e'], 10))
     plt.title('Top 10 Components with Most Issues', fontsize=28)
     plt.xlabel('Number of Issues', fontsize=22)
     plt.ylabel('Components', fontsize=22)
