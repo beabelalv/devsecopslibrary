@@ -21,6 +21,17 @@ template_path = args.template_path
 images_path = 'sonarqube/images/'
 os.makedirs(images_path, exist_ok=True)
 
+def get_image_as_data_url(image_path):
+    with open(image_path, 'rb') as image_file:
+        encoded_image = base64.b64encode(image_file.read()).decode()
+    return f"data:image/png;base64,{encoded_image}"
+
+def load_json(file_path, key):
+    with open(file_path) as f:
+        data = json.load(f)
+    return pd.json_normalize(data[key])
+
+# Functions to generate plots
 def generate_severity_plot(df):
     severity_counts = df['severity'].value_counts()
     colors = {
