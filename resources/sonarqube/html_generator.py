@@ -35,9 +35,9 @@ def load_json(file_path, key):
 def generate_severity_plot(df):
     severity_counts = df['severity'].value_counts()
     colors = {
-        'CRITICAL': '#8c564b',  # A darker shade
-        'MAJOR': '#f72d2a',    # Deep red
-        'MINOR': '#66BB6A'     # Muted green
+        'CRITICAL': '#f72d2a',  # red
+        'MAJOR': 'ff7f0e',    # orange
+        'MINOR': '#d1ca6f'     # Muted yellow
     }
     bar_colors = [colors.get(severity) for severity in severity_counts.index]
     
@@ -82,7 +82,7 @@ def generate_issue_type_plot(df):
 def generate_vulnerability_prob_plot(df):
     vulnerability_prob_counts = df['vulnerabilityProbability'].value_counts()
     plt.figure(figsize=(20, 12))
-    bars = plt.bar(vulnerability_prob_counts.index, vulnerability_prob_counts.values, color=sns.color_palette(['#66BB6A', '#1f77b4', '#ff7f0e'], len(vulnerability_prob_counts)))
+    bars = plt.bar(vulnerability_prob_counts.index, vulnerability_prob_counts.values, color=sns.color_palette(['#ff7f0e', '#f72d2a', '#d1ca6f'], len(vulnerability_prob_counts)))
     plt.title('Distribution of Hotspots by Vulnerability Probability', fontsize=28)
     plt.xlabel('Vulnerability Probability', fontsize=22)
     plt.ylabel('Number of Hotspots', fontsize=22)
