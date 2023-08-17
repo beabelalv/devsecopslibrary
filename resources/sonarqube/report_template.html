@@ -1,8 +1,5 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title>SonarQube Security Report</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,27 +9,27 @@
             line-height: 1.6;
             background-color: #f2f2f2;
         }
-
+    
         h1 {
             color: #333;
         }
-
+    
         h2, h3 {
             color: #555;
         }
-
+    
         .report-img {
             width: 48%;
             height: auto;
         }
-
+    
         .img-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
         }
-
+    
         table {
             width: 100%;
             border-collapse: collapse;
@@ -41,27 +38,27 @@
             overflow: hidden;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
-
+    
         th, td {
             border: none;
             padding: 8px;
             text-align: left;
             background: transparent;
         }
-
+    
         tr:nth-child(even) {
             background-color: #f2f2f2;
         }
-
+    
         /* Gradient styles for titles */
         .title-low {
             background: linear-gradient(to right, #FFEB3B, #FFC107);
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 5px;
-            color: #333;
+            display: inline-block;  // To apply background only to the text
+            padding: 5px 10px;      // Some padding for aesthetics
+            border-radius: 5px;     // Rounded corners
+            color: #333;            // Text color
         }
-
+    
         .title-medium {
             background: linear-gradient(to right, #FF9800, #FF5722);
             display: inline-block;
@@ -69,7 +66,7 @@
             border-radius: 5px;
             color: #333;
         }
-
+    
         .title-high {
             background: linear-gradient(to right, #F44336, #B71C1C);
             display: inline-block;
@@ -77,64 +74,75 @@
             border-radius: 5px;
             color: #333;
         }
-
-        /* Gradient styles for table headers based on severity */
-        .low {
-            background: linear-gradient(to right, #FFEB3B, #FFC107);
-        }
-
-        .medium {
-            background: linear-gradient(to right, #FF9800, #FF5722);
-        }
-
-        .high {
-            background: linear-gradient(to right, #F44336, #B71C1C);
-        }
     </style>
 </head>
 <body>
-    <h1 class="title-high">Security Report</h1>
-    <h2 class="title-medium">1. SonarQube Analysis</h2>
-    <h2 class="title-low">2. Summary</h2>
-    
-    <!-- Example image display -->
-    <img class="report-img" src="{{ severity_plot }}" alt="Severity Count">
-    <img class="report-img" src="{{ file_plot }}" alt="File Count">
+    <h1>SonarQube Security Report</h1>
 
-    <h2 class="title-medium">3. Details</h2>
+    <h2>1. Overview</h2>
     <p>
-        In this section, we provide detailed information about each vulnerability found by the SonarQube tool.
-        This includes the file where the issue was found, the line number, a description of the issue, the severity and more.
+        SonarQube is an open-source platform developed by SonarSource for continuous inspection of code quality. 
+        It performs automatic reviews with static analysis of code to detect bugs, code smells, and security vulnerabilities.
     </p>
 
-    {% for severity in ['LOW', 'MEDIUM', 'HIGH'] %}
-        <h3 class="title-{{ severity|lower }}">{{ severity }} Severity</h3>
-        <table>
-            <thead class="{{ severity|lower }}">
-                <tr>
-                    <th>File</th>
-                    <th>Line Number</th>
-                    <th>Code</th>
-                    <th>Description</th>
-                    <th>CWE</th>
-                    <th>Confidence</th>
-                    <th>More Info</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for index, row in data[data.issue_severity == severity].iterrows() %}
-                <tr>
-                    <td>{{ row.filename }}</td>
-                    <td>{{ row.line_number }}</td>
-                    <td><pre>{{ row.code }}</pre></td>
-                    <td>{{ row.issue_text }}</td>
-                    <td>{{ row.cwe_id }}</td>
-                    <td>{{ row.issue_confidence }}</td>
-                    <td><a href="{{ row.more_info }}">Link</a></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endfor %}
+    <h2>2. Summary</h2>
+    <div class="img-container">
+        <img class="report-img" src="{{ severity_plot }}" alt="Severity Count">
+        <img class="report-img" src="{{ file_plot }}" alt="File Count">
+        <img class="report-img" src="{{ issue_type_plot }}" alt="Issue Type and Total Security Hotspots">
+        <img class="report-img" src="{{ category_plot }}" alt="Number of Hotspots per Security Category">
+        <img class="report-img" src="{{ vulnerability_prob_plot }}" alt="Distribution of Hotspots by Vulnerability Probability">
+        <img class="report-img" src="{{ hotspot_file_plot }}" alt="Top 10 Components with Most Hotspots">
+    </div>
+
+    <h2>3. Issue Details</h2>
+    <p>
+        Detailed information about each vulnerability found by the SonarQube tool.
+    </p>
+    <table>
+        <thead>
+            <tr>
+                <th>Component</th>
+                <th>Severity</th>
+                <th>Issue Type</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for index, row in issues_data.iterrows() %}
+            <tr>
+                <td>{{ row.component }}</td>
+                <td>{{ row.severity }}</td>
+                <td>{{ row.type }}</td>
+                <td>{{ row.message }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>4. Hotspot Details</h2>
+    <p>
+        Detailed information about each security hotspot found by the SonarQube tool.
+    </p>
+    <table>
+        <thead>
+            <tr>
+                <th>Component</th>
+                <th>Category</th>
+                <th>Vulnerability Probability</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for index, row in hotspots_data.iterrows() %}
+            <tr>
+                <td>{{ row.component }}</td>
+                <td>{{ row.category }}</td>
+                <td>{{ row.vulnerabilityProbability }}</td>
+                <td>{{ row.message }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
 </html>
