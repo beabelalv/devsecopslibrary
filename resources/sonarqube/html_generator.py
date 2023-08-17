@@ -59,7 +59,7 @@ def generate_file_plot(df):
 def generate_category_plot(df):
     category_counts = df['securityCategory'].value_counts()
     plt.figure(figsize=(20, 12))
-    category_counts.plot.pie(autopct="%.1f%%", colors=sns.color_palette("Set2", len(category_counts)), startangle=90)
+    category_counts.plot.pie(autopct="%.1f%%", colors=sns.color_palette("Set2", len(category_counts)), startangle=90, fontsize=18, textprops={'fontsize': 16})
     plt.title('Number of Hotspots per Security Category', fontsize=24)
     plt.tight_layout()
     plt.savefig(os.path.join(images_path, 'category_counts.png'))
@@ -67,7 +67,7 @@ def generate_category_plot(df):
 def generate_issue_type_plot(df):
     issue_type_counts = df['type'].value_counts()
     plt.figure(figsize=(20, 12))
-    issue_type_counts.plot.pie(autopct="%.1f%%", colors=sns.color_palette("coolwarm", len(issue_type_counts)), startangle=90)
+    issue_type_counts.plot.pie(autopct="%.1f%%", colors=sns.color_palette("coolwarm", len(issue_type_counts)), startangle=90, fontsize=18, textprops={'fontsize': 16})
     plt.title('Distribution of Issue Types', fontsize=24)
     plt.tight_layout()
     plt.savefig(os.path.join(images_path, 'issue_type_counts.png'))
