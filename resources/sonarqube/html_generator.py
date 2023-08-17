@@ -52,25 +52,23 @@ def generate_file_plot(df):
     plt.tight_layout()
     plt.savefig(os.path.join(images_path, 'file_counts.png'))
 
-def generate_issue_type_plot(df):
-    issue_type_counts = df['type'].value_counts()
-    plt.figure(figsize=(20, 12))
-    bars = plt.bar(issue_type_counts.index, issue_type_counts.values, color=sns.color_palette("coolwarm", len(issue_type_counts)))
-    plt.title('Distribution of Issue Types')
-    plt.xlabel('Issue Type')
-    plt.ylabel('Number of Issues')
-    plt.tight_layout()
-    plt.savefig(os.path.join(images_path, 'issue_type_counts.png'))
+    def generate_category_plot(df):
+        category_counts = df['securityCategory'].value_counts()
+        plt.figure(figsize=(20, 12))
+        category_counts.plot.pie(autopct="%.1f%%", colors=sns.color_palette("Set2", len(category_counts)), startangle=90)
+        plt.title('Number of Hotspots per Security Category')
+        plt.ylabel('')  # Remove y-label as it's not required for pie chart
+        plt.tight_layout()
+        plt.savefig(os.path.join(images_path, 'category_counts.png'))
 
-def generate_category_plot(df):
-    category_counts = df['securityCategory'].value_counts()
-    plt.figure(figsize=(20, 12))
-    bars = plt.bar(category_counts.index, category_counts.values, color=sns.color_palette("Set2", len(category_counts)))
-    plt.title('Number of Hotspots per Security Category')
-    plt.xlabel('Security Category')
-    plt.ylabel('Number of Hotspots')
-    plt.tight_layout()
-    plt.savefig(os.path.join(images_path, 'category_counts.png'))
+    def generate_issue_type_plot(df):
+        issue_type_counts = df['type'].value_counts()
+        plt.figure(figsize=(20, 12))
+        issue_type_counts.plot.pie(autopct="%.1f%%", colors=sns.color_palette("coolwarm", len(issue_type_counts)), startangle=90)
+        plt.title('Distribution of Issue Types')
+        plt.ylabel('')  # Remove y-label as it's not required for pie chart
+        plt.tight_layout()
+        plt.savefig(os.path.join(images_path, 'issue_type_counts.png'))
 
 def generate_vulnerability_prob_plot(df):
     vulnerability_prob_counts = df['vulnerabilityProbability'].value_counts()
