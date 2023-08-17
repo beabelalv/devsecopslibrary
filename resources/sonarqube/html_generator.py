@@ -36,7 +36,7 @@ def generate_severity_plot(df):
     severity_counts = df['severity'].value_counts()
     colors = {
         'CRITICAL': '#f72d2a',  # red
-        'MAJOR': 'ff7f0e',    # orange
+        'MAJOR': '#ff7f0e',    # orange
         'MINOR': '#d1ca6f'     # Muted yellow
     }
     bar_colors = [colors.get(severity) for severity in severity_counts.index]
