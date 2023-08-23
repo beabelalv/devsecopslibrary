@@ -31,9 +31,10 @@ def load_json(file_path, key):
         data = json.load(f)
     return pd.json_normalize(data[key])
 
-def generate_no_data_image(image_path):
+def generate_no_data_image(image_path, title):
     plt.figure(figsize=(20, 12))
-    plt.text(0.5, 0.5, 'No Data Found', horizontalalignment='center', verticalalignment='center', fontsize=28, color='red')
+    plt.text(0.5, 0.6, title, horizontalalignment='center', verticalalignment='center', fontsize=28, color='black')
+    plt.text(0.5, 0.4, 'No Data Found', horizontalalignment='center', verticalalignment='center', fontsize=28, color='red')
     plt.axis('off')
     plt.tight_layout()
     plt.savefig(image_path)
@@ -120,9 +121,9 @@ if not df_issues.empty:
     generate_file_plot(df_issues)
     generate_issue_type_plot(df_issues)
 else:
-    generate_no_data_image(os.path.join(images_path, 'severity_counts.png'))
-    generate_no_data_image(os.path.join(images_path, 'file_counts.png'))
-    generate_no_data_image(os.path.join(images_path, 'issue_type_counts.png'))
+    generate_no_data_image(os.path.join(images_path, 'severity_counts.png'), 'Number of Issues per Severity Level')
+    generate_no_data_image(os.path.join(images_path, 'file_counts.png'), 'Top 10 Components with Most Issues')
+    generate_no_data_image(os.path.join(images_path, 'issue_type_counts.png'), 'Distribution of Issue Types')
 
 # Check if there are hotspots and generate corresponding plots
 if not df_hotspots.empty:
@@ -130,9 +131,9 @@ if not df_hotspots.empty:
     generate_vulnerability_prob_plot(df_hotspots)
     generate_hotspot_file_plot(df_hotspots)
 else:
-    generate_no_data_image(os.path.join(images_path, 'category_counts.png'))
-    generate_no_data_image(os.path.join(images_path, 'vulnerability_prob_counts.png'))
-    generate_no_data_image(os.path.join(images_path, 'hotspot_file_counts.png'))
+    generate_no_data_image(os.path.join(images_path, 'category_counts.png'), 'Number of Hotspots per Security Category')
+    generate_no_data_image(os.path.join(images_path, 'vulnerability_prob_counts.png'), 'Distribution of Hotspots by Vulnerability Probability')
+    generate_no_data_image(os.path.join(images_path, 'hotspot_file_counts.png'), 'Top 10 Components with Most Hotspots')
 
 # Convert the images to data URLs
 severity_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'severity_counts.png'))
