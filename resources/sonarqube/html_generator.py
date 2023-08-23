@@ -31,6 +31,13 @@ def load_json(file_path, key):
         data = json.load(f)
     return pd.json_normalize(data[key])
 
+def generate_no_data_image(image_path):
+    plt.figure(figsize=(20, 12))
+    plt.text(0.5, 0.5, 'No Data Found', horizontalalignment='center', verticalalignment='center', fontsize=28, color='red')
+    plt.axis('off')
+    plt.tight_layout()
+    plt.savefig(image_path)
+
 # Functions to generate plots
 def generate_severity_plot(df):
     severity_counts = df['severity'].value_counts()
@@ -63,14 +70,6 @@ def generate_file_plot(df):
     plt.tight_layout()
     plt.savefig(os.path.join(images_path, 'file_counts.png'))
 
-def generate_category_plot(df):
-    category_counts = df['securityCategory'].value_counts()
-    plt.figure(figsize=(20, 12))
-    category_counts.plot.pie(autopct="%.1f%%", colors=sns.color_palette(['#66BB6A', '#1f77b4', '#ff7f0e', '#66bba2'], len(category_counts)), startangle=90, fontsize=22, textprops={'fontsize': 20})
-    plt.title('Number of Hotspots per Security Category', fontsize=28)
-    plt.tight_layout()
-    plt.savefig(os.path.join(images_path, 'category_counts.png'))
-
 def generate_issue_type_plot(df):
     issue_type_counts = df['type'].value_counts()
     plt.figure(figsize=(20, 12))
@@ -78,6 +77,14 @@ def generate_issue_type_plot(df):
     plt.title('Distribution of Issue Types', fontsize=28)
     plt.tight_layout()
     plt.savefig(os.path.join(images_path, 'issue_type_counts.png'))
+
+def generate_category_plot(df):
+    category_counts = df['securityCategory'].value_counts()
+    plt.figure(figsize=(20, 12))
+    category_counts.plot.pie(autopct="%.1f%%", colors=sns.color_palette(['#66BB6A', '#1f77b4', '#ff7f0e', '#66bba2'], len(category_counts)), startangle=90, fontsize=22, textprops={'fontsize': 20})
+    plt.title('Number of Hotspots per Security Category', fontsize=28)
+    plt.tight_layout()
+    plt.savefig(os.path.join(images_path, 'category_counts.png'))
 
 def generate_vulnerability_prob_plot(df):
     vulnerability_prob_counts = df['vulnerabilityProbability'].value_counts()
@@ -112,20 +119,28 @@ if not df_issues.empty:
     generate_severity_plot(df_issues)
     generate_file_plot(df_issues)
     generate_issue_type_plot(df_issues)
+else:
+    generate_no_data_image(os.path.join(images_path, 'severity_counts.png'))
+    generate_no_data_image(os.path.join(images_path, 'file_counts.png'))
+    generate_no_data_image(os.path.join(images_path, 'issue_type_counts.png'))
 
 # Check if there are hotspots and generate corresponding plots
 if not df_hotspots.empty:
     generate_category_plot(df_hotspots)
     generate_vulnerability_prob_plot(df_hotspots)
     generate_hotspot_file_plot(df_hotspots)
+else:
+    generate_no_data_image(os.path.join(images_path, 'category_counts.png'))
+    generate_no_data_image(os.path.join(images_path, 'vulnerability_prob_counts.png'))
+    generate_no_data_image(os.path.join(images_path, 'hotspot_file_counts.png'))
 
-# Convert the images to data URLs only if they were generated
-severity_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'severity_counts.png')) if not df_issues.empty else None
-file_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'file_counts.png')) if not df_issues.empty else None
-issue_type_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'issue_type_counts.png')) if not df_issues.empty else None
-category_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'category_counts.png')) if not df_hotspots.empty else None
-vulnerability_prob_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'vulnerability_prob_counts.png')) if not df_hotspots.empty else None
-hotspot_file_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'hotspot_file_counts.png')) if not df_hotspots.empty else None
+# Convert the images to data URLs
+severity_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'severity_counts.png'))
+file_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'file_counts.png'))
+issue_type_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'issue_type_counts.png'))
+category_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'category_counts.png'))
+vulnerability_prob_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'vulnerability_prob_counts.png'))
+hotspot_file_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'hotspot_file_counts.png'))
 
 # Render the HTML template
 env = Environment(loader=FileSystemLoader('./'))
