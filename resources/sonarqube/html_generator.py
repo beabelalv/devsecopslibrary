@@ -107,21 +107,25 @@ def generate_hotspot_file_plot(df):
 df_issues = load_json(issues_file_path, 'issues')
 df_hotspots = load_json(hotspots_file_path, 'hotspots')
 
-# Generate all plots
-generate_severity_plot(df_issues)
-generate_file_plot(df_issues)
-generate_issue_type_plot(df_issues)
-generate_category_plot(df_hotspots)
-generate_vulnerability_prob_plot(df_hotspots)
-generate_hotspot_file_plot(df_hotspots)
+# Check if there are issues and generate corresponding plots
+if not df_issues.empty:
+    generate_severity_plot(df_issues)
+    generate_file_plot(df_issues)
+    generate_issue_type_plot(df_issues)
 
-# Convert the images to data URLs
-severity_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'severity_counts.png'))
-file_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'file_counts.png'))
-issue_type_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'issue_type_counts.png'))
-category_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'category_counts.png'))
-vulnerability_prob_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'vulnerability_prob_counts.png'))
-hotspot_file_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'hotspot_file_counts.png'))
+# Check if there are hotspots and generate corresponding plots
+if not df_hotspots.empty:
+    generate_category_plot(df_hotspots)
+    generate_vulnerability_prob_plot(df_hotspots)
+    generate_hotspot_file_plot(df_hotspots)
+
+# Convert the images to data URLs only if they were generated
+severity_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'severity_counts.png')) if not df_issues.empty else None
+file_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'file_counts.png')) if not df_issues.empty else None
+issue_type_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'issue_type_counts.png')) if not df_issues.empty else None
+category_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'category_counts.png')) if not df_hotspots.empty else None
+vulnerability_prob_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'vulnerability_prob_counts.png')) if not df_hotspots.empty else None
+hotspot_file_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'hotspot_file_counts.png')) if not df_hotspots.empty else None
 
 # Render the HTML template
 env = Environment(loader=FileSystemLoader('./'))
