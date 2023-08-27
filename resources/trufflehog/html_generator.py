@@ -30,14 +30,14 @@ def load_and_parse_trufflehog(file_path):
     df = pd.DataFrame(data)
     return df
 
-def generate_file_plot_trufflehog_pie(df, top_n=10):
+def generate_file_plot_trufflehog_pie(df, top_n=5):  # Adjusted top_n to 5
     file_counts = df['path'].value_counts()
     if len(file_counts) > top_n:
         top_files = file_counts[:top_n]
         others_count = file_counts[top_n:].sum()
         file_counts = pd.concat([top_files, pd.Series([others_count], index=['Others'])])
     colors = sns.color_palette("pastel", len(file_counts))
-    plt.figure(figsize=(14, 10))
+    plt.figure(figsize=(20, 15))  # Increased the size of the figure
     wedges, texts, autotexts = plt.pie(file_counts.values, labels=file_counts.index, autopct='%1.1f%%', startangle=140, colors=colors, wedgeprops=dict(width=0.3, edgecolor='w'), pctdistance=0.85, textprops=dict(color="black"))
     for text, autotext in zip(texts, autotexts):
         text.set(size=15)
