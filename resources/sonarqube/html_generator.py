@@ -41,13 +41,17 @@ def generate_no_data_image(image_path, title):
 
 # Functions to generate plots
 def generate_severity_plot(df):
+    if 'severity' not in df.columns:
+        generate_no_data_image(os.path.join(images_path, 'severity_counts.png'), 'Number of Issues per Severity Level')
+        return
+
     severity_counts = df['severity'].value_counts()
     colors = {
         'CRITICAL': '#f72d2a',  # red
         'MAJOR': '#ff7f0e',    # orange
         'MINOR': '#e3de44'     # Muted yellow
     }
-    bar_colors = [colors.get(severity) for severity in severity_counts.index]
+    bar_colors = [colors.get(severity, '#808080') for severity in severity_counts.index]  # default to grey if severity not found
     
     plt.figure(figsize=(20, 12))
     bars = plt.bar(severity_counts.index, severity_counts.values, color=bar_colors)
