@@ -35,7 +35,7 @@ def generate_file_plot_trufflehog_pie(df, top_n=10):
     if len(file_counts) > top_n:
         top_files = file_counts[:top_n]
         others_count = file_counts[top_n:].sum()
-        file_counts = top_files.append(pd.Series([others_count], index=['Others']))
+        file_counts = pd.concat([top_files, pd.Series([others_count], index=['Others'])])
     colors = sns.color_palette("pastel", len(file_counts))
     plt.figure(figsize=(14, 10))
     wedges, texts, autotexts = plt.pie(file_counts.values, labels=file_counts.index, autopct='%1.1f%%', startangle=140, colors=colors, wedgeprops=dict(width=0.3, edgecolor='w'), pctdistance=0.85, textprops=dict(color="black"))
