@@ -40,7 +40,7 @@ def generate_no_data_image(image_path, title):
     plt.tight_layout()
     plt.savefig(image_path)
 
-def wrap_text(text, width=30):
+def wrap_text(text, width=55):
     """Wrap text into multiple lines of the given width."""
     return '\n'.join(wrap(text, width=width))
 
