@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
+<head>
     <title>Sonarqube Security Report</title>
     <style>
-
         .gradient {
-        background: linear-gradient(to right, #66bba2, #66BB6A);
+            background: linear-gradient(to right, #66bba2, #66BB6A);
         }
 
         body {
@@ -15,27 +15,27 @@
             line-height: 1.6;
             background-color: #f2f2f2;
         }
-    
+
         h1 {
             color: #333;
         }
-    
+
         h2, h3 {
             color: #555;
         }
-    
+
         .report-img {
             width: 48%;
             height: auto;
         }
-    
+
         .img-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
         }
-    
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -44,27 +44,27 @@
             overflow: hidden;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
-    
+
         th, td {
             border: none;
             padding: 8px;
             text-align: left;
             background: transparent;
         }
-    
+
         tr:nth-child(even) {
             background-color: #f2f2f2;
         }
-    
+
         /* Gradient styles for titles */
         .title-low {
             background: linear-gradient(to right, #FFEB3B, #FFC107);
-            display: inline-block;  // To apply background only to the text
-            padding: 5px 10px;      // Some padding for aesthetics
-            border-radius: 5px;     // Rounded corners
-            color: #333;            // Text color
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: #333;
         }
-    
+
         .title-medium {
             background: linear-gradient(to right, #FF9800, #FF5722);
             display: inline-block;
@@ -72,7 +72,7 @@
             border-radius: 5px;
             color: #333;
         }
-    
+
         .title-high {
             background: linear-gradient(to right, #F44336, #B71C1C);
             display: inline-block;
@@ -84,7 +84,6 @@
 </head>
 <body>
     <h1>SonarQube Security Report</h1>
-
     <h2>1. Overview</h2>
     <p>
         SonarQube is an open-source platform developed by SonarSource for continuous inspection of code quality. 
@@ -101,9 +100,11 @@
         <img class="report-img" src="{{ hotspot_file_plot }}" alt="Top 10 Components with Most Hotspots">
     </div>
 
-    <h2>3. Issue Details</h2>
+    <!-- Issues Segmented by Severity -->
+    {% for severity, data in issues_data_segmented.items() %}
+    <h2>3. Issue Details ({{ severity }})</h2>
     <p>
-        Detailed information about each vulnerability found by the SonarQube tool.
+        Detailed information about each vulnerability of severity "{{ severity }}" found by the SonarQube tool.
     </p>
     <table>
         <thead class="gradient">
@@ -115,7 +116,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for index, row in issues_data.iterrows() %}
+            {% for index, row in data.iterrows() %}
             <tr>
                 <td>{{ row.component }}</td>
                 <td>{{ row.severity }}</td>
@@ -125,10 +126,13 @@
             {% endfor %}
         </tbody>
     </table>
+    {% endfor %}
 
-    <h2>4. Hotspot Details</h2>
+    <!-- Hotspots Segmented by Vulnerability Probability -->
+    {% for prob, data in hotspots_data_segmented.items() %}
+    <h2>4. Hotspot Details ({{ prob }})</h2>
     <p>
-        Detailed information about each security hotspot found by the SonarQube tool.
+        Detailed information about each security hotspot with vulnerability probability "{{ prob }}" found by the SonarQube tool.
     </p>
     <table>
         <thead class="gradient">
@@ -140,7 +144,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for index, row in hotspots_data.iterrows() %}
+            {% for index, row in data.iterrows() %}
             <tr>
                 <td>{{ row.component }}</td>
                 <td>{{ row.category }}</td>
@@ -150,5 +154,6 @@
             {% endfor %}
         </tbody>
     </table>
+    {% endfor %}
 </body>
 </html>

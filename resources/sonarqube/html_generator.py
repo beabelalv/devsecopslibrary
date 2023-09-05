@@ -44,7 +44,6 @@ def wrap_text(text, width=55):
     """Wrap text into multiple lines of the given width."""
     return '\n'.join(wrap(text, width=width))
 
-# Functions to generate plots
 def generate_severity_plot(df):
     if 'severity' not in df.columns:
         generate_no_data_image(os.path.join(images_path, 'severity_counts.png'), 'Number of Issues per Severity Level')
@@ -130,9 +129,18 @@ def generate_hotspot_file_plot(df):
     plt.subplots_adjust(top=0.9)
     plt.savefig(os.path.join(images_path, 'hotspot_file_counts.png'))
 
+def segment_data_by_column(df, column_name):
+    """Segment data by unique values in a column."""
+    levels = df[column_name].unique()
+    return {level: df[df[column_name] == level] for level in levels}
+
 # Main
 df_issues = load_json(issues_file_path, 'issues')
 df_hotspots = load_json(hotspots_file_path, 'hotspots')
+
+# Segment the data
+issues_segmented = segment_data_by_column(df_issues, 'severity') if 'severity' in df_issues.columns else {}
+hotspots_segmented = segment_data_by_column(df_hotspots, 'vulnerabilityProbability')
 
 # Check if there are issues and generate corresponding plots
 if not df_issues.empty:
@@ -166,8 +174,8 @@ hotspot_file_plot_data_url = get_image_as_data_url(os.path.join(images_path, 'ho
 env = Environment(loader=FileSystemLoader('./'))
 template = env.get_template(template_path)
 html_content = template.render(
-    issues_data=df_issues,
-    hotspots_data=df_hotspots,
+    issues_data_segmented=issues_segmented,
+    hotspots_data_segmented=hotspots_segmented,
     severity_plot=severity_plot_data_url,
     file_plot=file_plot_data_url,
     issue_type_plot=issue_type_plot_data_url,
