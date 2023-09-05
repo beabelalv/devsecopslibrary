@@ -63,6 +63,19 @@
         .high {
             background: linear-gradient(to right, #F44336, #B71C1C);
         }
+
+        /* New gradients for issue severity */
+        .minor {
+            background: linear-gradient(to right, #9E9E9E, #757575);
+        }
+
+        .major {
+            background: linear-gradient(to right, #FFC107, #FFA000);
+        }
+
+        .critical {
+            background: linear-gradient(to right, #FF5722, #D84315);
+        }
     </style>
 </head>
 <body>
@@ -79,6 +92,7 @@
         <img class="report-img" src="{{ severity_plot }}" alt="Severity Count">
         <img class="report-img" src="{{ file_plot }}" alt="File Count">
         <img class="report-img" src="{{ issue_type_plot }}" alt="Issue Type and Total Security Hotspots">
+        <img class="report-img" src="{{ category_plot }}" alt="Number of Hotspots per Security Category">
         <img class="report-img" src="{{ vulnerability_prob_plot }}" alt="Distribution of Hotspots by Vulnerability Probability">
         <img class="report-img" src="{{ hotspot_file_plot }}" alt="Top 10 Components with Most Hotspots">
     </div>
