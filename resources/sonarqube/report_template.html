@@ -79,6 +79,12 @@
         .info {
             background: linear-gradient(to right, #81D4FA, #29B6F6);
         }
+
+        /* Styling for the total rows */
+        .total-row {
+            background-color: rgba(0, 120, 255, 0.1);
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -125,7 +131,7 @@
             </tr>
             {% endfor %}
             <!-- Total count for this severity -->
-            <tr style="font-weight: bold;">
+            <tr class="total-row">
                 <td colspan="3">Total {{ severity }} Issues</td>
                 <td>{{ data.shape[0] }}</td>
             </tr>
@@ -156,7 +162,7 @@
             </tr>
             {% endfor %}
             <!-- Total count for this vulnerability probability -->
-            <tr style="font-weight: bold;">
+            <tr class="total-row">
                 <td colspan="2">Total {{ prob }} Vulnerability Probability</td>
                 <td>{{ data.shape[0] }}</td>
             </tr>
