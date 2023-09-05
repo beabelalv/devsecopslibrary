@@ -6,6 +6,7 @@ from jinja2 import Environment, FileSystemLoader
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from textwrap import wrap
 
 # Argument parsing
 parser = argparse.ArgumentParser(description='Process the JSON file and HTML template.')
@@ -39,6 +40,10 @@ def load_and_parse(file_path):
     df = parse_json(data)
     return df
 
+def wrap_text(text, width=30):
+    """Wrap text into multiple lines of the given width."""
+    return '\n'.join(wrap(text, width))
+
 def generate_severity_plot(df):
     severity_counts = df['issue_severity'].value_counts()
     severity_palette = {
@@ -58,10 +63,12 @@ def generate_severity_plot(df):
     plt.savefig(os.path.join(images_path, 'severity_counts.png'), dpi=300)
 
 def generate_file_plot(df):
-    file_counts = df['filename'].value_counts()
+    file_counts = df['filename'].value_counts().head(10)
+    wrapped_labels = [wrap_text(f"{fname} ({count})", width=40) for fname, count in file_counts.items()]
+
     plt.figure(figsize=(20, 12))
     plt.rcParams.update({'font.size': 24})  # Increase the font size
-    sns.barplot(y=file_counts.index[:10], x=file_counts.values[:10], palette=sns.color_palette(['#66BB6A', '#1f77b4', '#66bba2', '#ff7f0e']), orient='h')
+    sns.barplot(y=wrapped_labels, x=file_counts.values, palette=sns.color_palette(['#66BB6A', '#1f77b4', '#66bba2', '#ff7f0e']), orient='h')
     plt.title('Number of Issues per File (Top 10)', fontsize=28)
     plt.xlabel('Number of Issues', fontsize=24)
     plt.ylabel('File', fontsize=24)
