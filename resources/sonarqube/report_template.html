@@ -3,10 +3,6 @@
 <head>
     <title>Sonarqube Security Report</title>
     <style>
-        .gradient {
-            background: linear-gradient(to right, #66bba2, #66BB6A);
-        }
-
         body {
             font-family: Arial, sans-serif;
             color: #333;
@@ -56,34 +52,22 @@
             background-color: #f2f2f2;
         }
 
-        /* Gradient styles for titles */
-        .title-low {
+        .low {
             background: linear-gradient(to right, #FFEB3B, #FFC107);
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 5px;
-            color: #333;
         }
 
-        .title-medium {
+        .medium {
             background: linear-gradient(to right, #FF9800, #FF5722);
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 5px;
-            color: #333;
         }
 
-        .title-high {
+        .high {
             background: linear-gradient(to right, #F44336, #B71C1C);
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 5px;
-            color: #333;
         }
     </style>
 </head>
 <body>
     <h1>SonarQube Security Report</h1>
+
     <h2>1. Overview</h2>
     <p>
         SonarQube is an open-source platform developed by SonarSource for continuous inspection of code quality. 
@@ -95,19 +79,18 @@
         <img class="report-img" src="{{ severity_plot }}" alt="Severity Count">
         <img class="report-img" src="{{ file_plot }}" alt="File Count">
         <img class="report-img" src="{{ issue_type_plot }}" alt="Issue Type and Total Security Hotspots">
-        <img class="report-img" src="{{ category_plot }}" alt="Number of Hotspots per Security Category">
         <img class="report-img" src="{{ vulnerability_prob_plot }}" alt="Distribution of Hotspots by Vulnerability Probability">
         <img class="report-img" src="{{ hotspot_file_plot }}" alt="Top 10 Components with Most Hotspots">
     </div>
 
-    <!-- Issues Segmented by Severity -->
-    {% for severity, data in issues_data_segmented.items() %}
-    <h2>3. Issue Details ({{ severity }})</h2>
+    <h2>3. Issue Details</h2>
     <p>
-        Detailed information about each vulnerability of severity "{{ severity }}" found by the SonarQube tool.
+        Detailed information about each vulnerability found by the SonarQube tool.
     </p>
+
+    {% for severity, data in issues_data_segmented.items() %}
     <table>
-        <thead class="gradient">
+        <thead class="{{ severity|lower }}">
             <tr>
                 <th>Component</th>
                 <th>Severity</th>
@@ -128,17 +111,16 @@
     </table>
     {% endfor %}
 
-    <!-- Hotspots Segmented by Vulnerability Probability -->
-    {% for prob, data in hotspots_data_segmented.items() %}
-    <h2>4. Hotspot Details ({{ prob }})</h2>
+    <h2>4. Hotspot Details</h2>
     <p>
-        Detailed information about each security hotspot with vulnerability probability "{{ prob }}" found by the SonarQube tool.
+        Detailed information about each security hotspot found by the SonarQube tool.
     </p>
+
+    {% for prob, data in hotspots_data_segmented.items() %}
     <table>
-        <thead class="gradient">
+        <thead class="{{ prob|lower }}">
             <tr>
                 <th>Component</th>
-                <th>Category</th>
                 <th>Vulnerability Probability</th>
                 <th>Message</th>
             </tr>
@@ -147,7 +129,6 @@
             {% for index, row in data.iterrows() %}
             <tr>
                 <td>{{ row.component }}</td>
-                <td>{{ row.category }}</td>
                 <td>{{ row.vulnerabilityProbability }}</td>
                 <td>{{ row.message }}</td>
             </tr>
