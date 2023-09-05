@@ -120,6 +120,11 @@
                     <td><a href="{{ row.more_info }}">Link</a></td>
                 </tr>
                 {% endfor %}
+                <!-- Total count for this severity -->
+                <tr style="font-weight: bold;">
+                    <td colspan="6">Total {{ severity }} Severity Issues</td>
+                    <td>{{ data[data.issue_severity == severity].shape[0] }}</td>
+                </tr>
             </tbody>
         </table>
     {% endfor %}
