@@ -15,8 +15,7 @@
         }
 
         .gradient {
-            background-color: rgba(0, 120, 255, 0.1);
-            font-weight: bold;
+        background: linear-gradient(to right, #66bba2, #66BB6A);
         }
 
         .total-row {
@@ -117,7 +116,7 @@
             </tr>
             {% endfor %}
             <!-- Total count of vulnerabilities -->
-            <tr style="font-weight: bold;" class="total-row">
+            <tr style="font-weight: bold;" class="total-rowE">
                 <td colspan="3">Total Vulnerabilities</td>
                 <td>{{ data.shape[0] }}</td>
             </tr>
