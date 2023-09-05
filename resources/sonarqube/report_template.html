@@ -119,6 +119,7 @@
             {% for index, row in data.iterrows() %}
             <tr>
                 <td>{{ row.component }}</td>
+                <td>{{ row.line }}</td>
                 <td>{{ row.severity }}</td>
                 <td>{{ row.type }}</td>
                 <td>{{ row.message }}</td>
@@ -151,6 +152,7 @@
             {% for index, row in data.iterrows() %}
             <tr>
                 <td>{{ row.component }}</td>
+                <td>{{ row.line }}</td>
                 <td>{{ row.vulnerabilityProbability }}</td>
                 <td>{{ row.message }}</td>
             </tr>
