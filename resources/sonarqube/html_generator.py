@@ -6,6 +6,7 @@ from jinja2 import Environment, FileSystemLoader
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from textwrap import wrap
 
 # Argument parsing for SonarQube report generation
 parser = argparse.ArgumentParser(description='Process the JSON files for SonarQube and HTML template.')
@@ -39,6 +40,10 @@ def generate_no_data_image(image_path, title):
     plt.tight_layout()
     plt.savefig(image_path)
 
+def wrap_text(text, width=30):
+    """Wrap text into multiple lines of the given width."""
+    return '\n'.join(wrap(text, width=width))
+
 # Functions to generate plots
 def generate_severity_plot(df):
     if 'severity' not in df.columns:
@@ -61,18 +66,22 @@ def generate_severity_plot(df):
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
     plt.tight_layout()
+    plt.subplots_adjust(top=0.9)
     plt.savefig(os.path.join(images_path, 'severity_counts.png'))
 
 def generate_file_plot(df):
     file_counts = df['component'].value_counts().head(10)
+    wrapped_labels = [wrap_text(label) for label in file_counts.index]
+
     plt.figure(figsize=(20, 12))
-    bars = plt.barh(file_counts.index, file_counts.values, color=sns.color_palette(['#66BB6A', '#1f77b4', '#66bba2', '#ff7f0e'], 10))
+    bars = plt.barh(wrapped_labels, file_counts.values, color=sns.color_palette(['#66BB6A', '#1f77b4', '#66bba2', '#ff7f0e'], 10))
     plt.title('Top 10 Components with Most Issues', fontsize=28)
     plt.xlabel('Number of Issues', fontsize=22)
     plt.ylabel('Components', fontsize=22)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
     plt.tight_layout()
+    plt.subplots_adjust(top=0.9)
     plt.savefig(os.path.join(images_path, 'file_counts.png'))
 
 def generate_issue_type_plot(df):
@@ -81,6 +90,7 @@ def generate_issue_type_plot(df):
     issue_type_counts.plot.pie(autopct="%.1f%%", colors=sns.color_palette(['#66BB6A', '#1f77b4', '#66bba2'], len(issue_type_counts)), startangle=90, fontsize=22, textprops={'fontsize': 20})
     plt.title('Distribution of Issue Types', fontsize=28)
     plt.tight_layout()
+    plt.subplots_adjust(top=0.9)
     plt.savefig(os.path.join(images_path, 'issue_type_counts.png'))
 
 def generate_category_plot(df):
@@ -89,6 +99,7 @@ def generate_category_plot(df):
     category_counts.plot.pie(autopct="%.1f%%", colors=sns.color_palette(['#66BB6A', '#1f77b4', '#ff7f0e', '#66bba2'], len(category_counts)), startangle=90, fontsize=22, textprops={'fontsize': 20})
     plt.title('Number of Hotspots per Security Category', fontsize=28)
     plt.tight_layout()
+    plt.subplots_adjust(top=0.9)
     plt.savefig(os.path.join(images_path, 'category_counts.png'))
 
 def generate_vulnerability_prob_plot(df):
@@ -101,18 +112,22 @@ def generate_vulnerability_prob_plot(df):
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
     plt.tight_layout()
+    plt.subplots_adjust(top=0.9)
     plt.savefig(os.path.join(images_path, 'vulnerability_prob_counts.png'))
 
 def generate_hotspot_file_plot(df):
     hotspot_file_counts = df['component'].value_counts().head(10)
+    wrapped_labels = [wrap_text(label) for label in hotspot_file_counts.index]
+
     plt.figure(figsize=(20, 12))
-    bars = plt.barh(hotspot_file_counts.index, hotspot_file_counts.values, color=sns.color_palette(['#66BB6A', '#1f77b4', '#66bba2'], 10))
+    bars = plt.barh(wrapped_labels, hotspot_file_counts.values, color=sns.color_palette(['#66BB6A', '#1f77b4', '#66bba2'], 10))
     plt.title('Top 10 Components with Most Hotspots', fontsize=28)
     plt.xlabel('Number of Hotspots', fontsize=22)
     plt.ylabel('Components', fontsize=22)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
     plt.tight_layout()
+    plt.subplots_adjust(top=0.9)
     plt.savefig(os.path.join(images_path, 'hotspot_file_counts.png'))
 
 # Main
