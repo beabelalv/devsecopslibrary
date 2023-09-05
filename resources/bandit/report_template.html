@@ -64,6 +64,11 @@
         .high {
             background: linear-gradient(to right, #F44336, #B71C1C);
         }
+        
+        .total-row {
+            background-color: rgba(0, 120, 255, 0.1);
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -121,7 +126,7 @@
                 </tr>
                 {% endfor %}
                 <!-- Total count for this severity -->
-                <tr style="font-weight: bold;">
+                <tr style="font-weight: bold;" class="total-row">
                     <td colspan="6">Total {{ severity }} Severity Issues</td>
                     <td>{{ data[data.issue_severity == severity].shape[0] }}</td>
                 </tr>

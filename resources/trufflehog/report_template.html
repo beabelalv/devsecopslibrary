@@ -68,8 +68,9 @@
             font-size: 16px; /* Consistent font size for the entire table */
         }
 
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
+        .total-row {
+            background-color: rgba(0, 120, 255, 0.1);
+            font-weight: bold;
         }
     </style>
 </head>
@@ -109,7 +110,13 @@
                 <td>{{ row.stringsFound }}</td>
             </tr>
             {% endfor %}
+            <!-- Summary Row -->
+            <tr style="font-weight: bold;" class="total-row">
+                <td colspan="4">Total Potential Secrets Found</td>
+                <td>{{ data.shape[0] }}</td>
+            </tr>
         </tbody>
     </table>
+    
 </body>
 </html>
