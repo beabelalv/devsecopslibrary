@@ -37,15 +37,12 @@ def generate_file_plot_trufflehog_pie(df, top_n=5):  # Adjusted top_n to 5
         others_count = file_counts[top_n:].sum()
         file_counts = pd.concat([top_files, pd.Series([others_count], index=['Others'])])
     colors = sns.color_palette("pastel", len(file_counts))
-    plt.figure(figsize=(20, 15))  # Increased the size of the figure
+    plt.figure(figsize=(10, 8))  # Adjusted the size of the figure to make the pie chart smaller
     wedges, texts, autotexts = plt.pie(file_counts.values, labels=file_counts.index, autopct='%1.1f%%', startangle=140, colors=colors, wedgeprops=dict(width=0.3, edgecolor='w'), pctdistance=0.85, textprops=dict(color="black"))
     for text, autotext in zip(texts, autotexts):
         text.set(size=24)  # Adjusted size to 24
         autotext.set(size=24)  # Adjusted size to 24
         autotext.set_color('black')
-    centre_circle = plt.Circle((0,0),0.90,fc='white')  # Adjusted the circle's radius to make the hole smaller
-    fig = plt.gcf()
-    fig.gca().add_artist(centre_circle)
     plt.title('Distribution of Secrets Detected Across Files', fontsize=28)  # Increased title font size to 28
     plt.tight_layout()
     plt.savefig(os.path.join(images_path, 'file_counts_trufflehog_pie_professional.png'), dpi=300)
