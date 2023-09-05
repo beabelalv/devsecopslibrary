@@ -64,21 +64,20 @@
             background: linear-gradient(to right, #F44336, #B71C1C);
         }
 
-        .info {
-            background: linear-gradient(to right, #81D4FA, #29B6F6);
-        }
-
-        /* New gradients for issue severity */
         .minor {
-            background: linear-gradient(to right, #9E9E9E, #757575);
+            background: linear-gradient(to right, #FFEB3B, #FFC107);
         }
 
         .major {
-            background: linear-gradient(to right, #FFC107, #FFA000);
+            background: linear-gradient(to right, #FF9800, #FF5722);
         }
 
         .critical {
-            background: linear-gradient(to right, #FF5722, #D84315);
+            background: linear-gradient(to right, #F44336, #B71C1C);
+        }
+
+        .info {
+            background: linear-gradient(to right, #81D4FA, #29B6F6);
         }
     </style>
 </head>
@@ -125,6 +124,11 @@
                 <td>{{ row.message }}</td>
             </tr>
             {% endfor %}
+            <!-- Total count for this severity -->
+            <tr style="font-weight: bold;">
+                <td colspan="3">Total {{ severity }} Issues</td>
+                <td>{{ data.shape[0] }}</td>
+            </tr>
         </tbody>
     </table>
     {% endfor %}
@@ -151,6 +155,11 @@
                 <td>{{ row.message }}</td>
             </tr>
             {% endfor %}
+            <!-- Total count for this vulnerability probability -->
+            <tr style="font-weight: bold;">
+                <td colspan="2">Total {{ prob }} Vulnerability Probability</td>
+                <td>{{ data.shape[0] }}</td>
+            </tr>
         </tbody>
     </table>
     {% endfor %}
