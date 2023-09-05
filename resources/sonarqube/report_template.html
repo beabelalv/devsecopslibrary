@@ -79,90 +79,86 @@
         .info {
             background: linear-gradient(to right, #81D4FA, #29B6F6);
         }
-
-        .blocker {
-            background: linear-gradient(to right, #B71C1C, #880E4F);
-        }
     </style>
 </head>
 <body>
-    <h1>Security Report</h1>
+    <h1>SonarQube Security Report</h1>
 
-    <h2>1. Summary</h2>
-    <!-- First row of images -->
-    <img class="report-img" src="{{ severity_plot }}" alt="Severity Count">
-    <img class="report-img" src="{{ file_plot }}" alt="File Count">
+    <h2>1. Overview</h2>
+    <p>
+        SonarQube is an open-source platform developed by SonarSource for continuous inspection of code quality. 
+        It performs automatic reviews with static analysis of code to detect bugs, code smells, and security vulnerabilities.
+    </p>
 
-    <!-- Margin between the rows -->
-    <div style="margin: 30px 0;"></div>
+    <h2>2. Summary</h2>
+    <div class="img-container">
+        <img class="report-img" src="{{ severity_plot }}" alt="Severity Count">
+        <img class="report-img" src="{{ file_plot }}" alt="File Count">
+        <img class="report-img" src="{{ issue_type_plot }}" alt="Issue Type and Total Security Hotspots">
+        <img class="report-img" src="{{ category_plot }}" alt="Number of Hotspots per Security Category">
+        <img class="report-img" src="{{ vulnerability_prob_plot }}" alt="Distribution of Hotspots by Vulnerability Probability">
+        <img class="report-img" src="{{ hotspot_file_plot }}" alt="Top 10 Components with Most Hotspots">
+    </div>
 
-    <!-- Second row of images -->
-    <img class="report-img" src="{{ issue_type_plot }}" alt="Issue Type Count">
-    <img class="report-img" src="{{ vulnerability_prob_plot }}" alt="Vulnerability Probability Count">
+    <h2>3. Issue Details</h2>
+    <p>
+        Detailed information about each vulnerability found by the SonarQube tool.
+    </p>
 
-    <h2>2. Issues Details</h2>
-
-    {% for severity in ['BLOCKER', 'CRITICAL', 'MAJOR', 'MINOR', 'INFO'] %}
-    <h3>{{ severity }} Severity Issues</h3>
+    {% for severity, data in issues_data_segmented.items() %}
     <table>
         <thead class="{{ severity|lower }}">
             <tr>
-                <th>File</th>
-                <th>Type</th>
+                <th>Component</th>
                 <th>Severity</th>
-                <th>Description</th>
-                <th>Status</th>
-                <th>Effort</th>
-                <th>Debt</th>
+                <th>Issue Type</th>
+                <th>Message</th>
             </tr>
         </thead>
         <tbody>
-            {% for index, row in data[data.severity == severity].iterrows() %}
+            {% for index, row in data.iterrows() %}
             <tr>
                 <td>{{ row.component }}</td>
-                <td>{{ row.type }}</td>
                 <td>{{ row.severity }}</td>
+                <td>{{ row.type }}</td>
                 <td>{{ row.message }}</td>
-                <td>{{ row.status }}</td>
-                <td>{{ row.effort }}</td>
-                <td>{{ row.debt }}</td>
             </tr>
             {% endfor %}
             <!-- Total count for this severity -->
-            <tr style="font-weight: bold; background: rgba(0, 120, 255, 0.1);">
-                <td colspan="6">Total {{ severity }} Severity Issues</td>
-                <td>{{ data[data.severity == severity].shape[0] }}</td>
+            <tr style="font-weight: bold;">
+                <td colspan="3">Total {{ severity }} Issues</td>
+                <td>{{ data.shape[0] }}</td>
             </tr>
         </tbody>
     </table>
     {% endfor %}
 
-    <h2>3. Security Hotspots Details</h2>
+    <h2>4. Hotspot Details</h2>
+    <p>
+        Detailed information about each security hotspot found by the SonarQube tool.
+    </p>
 
-    {% for hotspot_level in ['HIGH', 'MEDIUM'] %}
-    <h3>{{ hotspot_level }} Probability Security Hotspots</h3>
+    {% for prob, data in hotspots_data_segmented.items() %}
     <table>
-        <thead class="{{ hotspot_level|lower }}">
+        <thead class="{{ prob|lower }}">
             <tr>
-                <th>File</th>
-                <th>Probability</th>
-                <th>Description</th>
-                <th>Status</th>
+                <th>Component</th>
+                <th>Vulnerability Probability</th>
+                <th>Message</th>
             </tr>
         </thead>
         <tbody>
-            {% for index, row in hotspots_data[hotspots_data.securityProbability == hotspot_level].iterrows() %}
+            {% for index, row in data.iterrows() %}
             <tr>
                 <td>{{ row.component }}</td>
-                <td>{{ row.securityProbability }}</td>
+                <td>{{ row.vulnerabilityProbability }}</td>
                 <td>{{ row.message }}</td>
-                <td>{{ row.status }}</td>
             </tr>
             {% endfor %}
-            <!-- Total count for this hotspot probability -->
-            <tr style="font-weight: bold; background: rgba(0, 120, 255, 0.1);">
-                <td colspan="3">Total {{ hotspot_level }} Probability Security Hotspots</td>
-                <td>{{ hotspots_data[hotspots_data.securityProbability == hotspot_level].shape[0] }}</td>
+            <!-- Total count for this vulnerability probability -->
+            <tr style="font-weight: bold;">
+                <td colspan="2">Total {{ prob }} Vulnerability Probability</td>
+                <td>{{ data.shape[0] }}</td>
             </tr>
         </tbody>
     </table>
