@@ -87,7 +87,6 @@
     </p>
 
     <h2>2. Summary</h2>
-    <!-- Images for the statistics -->
     <img class="report-img" src="{{ total_packages_pie }}" alt="Total Packages Analyzed">
     <img class="report-img" src="{{ vulnerabilities_per_package_pie }}" alt="Vulnerabilities per Package">
 
@@ -115,7 +114,6 @@
                 <td><a href="{{ row.more_info_url }}">Link</a></td>
             </tr>
             {% endfor %}
-            <!-- Total count of vulnerabilities -->
             <tr style="font-weight: bold;" class="total-row">
                 <td colspan="3">Total Vulnerabilities</td>
                 <td>{{ data.shape[0] }}</td>

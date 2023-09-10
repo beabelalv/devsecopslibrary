@@ -9,27 +9,27 @@
             color: #333;
             margin: 0;
             padding: 20px;
-            line-height: 1.5; /* Slightly increased line height */
+            line-height: 1.5; 
         }
 
         h1 {
             color: #444;
-            font-size: 24px; /* Increased font size */
+            font-size: 24px; 
         }
 
         h2 {
             color: #555;
-            font-size: 20px; /* Increased font size */
+            font-size: 20px; 
         }
 
         h3 {
             color: #666;
-            font-size: 18px; /* Increased font size */
+            font-size: 18px; 
         }
 
         p {
             color: #777;
-            font-size: 16px; /* Increased font size */
+            font-size: 16px; 
         }
 
         .report-img {
@@ -64,7 +64,7 @@
             padding: 8px;
             text-align: left;
             color: #777;
-            font-size: 16px; /* Consistent font size for the entire table */
+            font-size: 16px; 
         }
 
         .total-row {
@@ -109,7 +109,6 @@
                 <td>{{ row.stringsFound }}</td>
             </tr>
             {% endfor %}
-            <!-- Summary Row -->
             <tr style="font-weight: bold;" class="total-row">
                 <td colspan="4">Total Potential Secrets Found</td>
                 <td>{{ data.shape[0] }}</td>
